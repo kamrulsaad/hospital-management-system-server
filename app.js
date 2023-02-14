@@ -6,8 +6,13 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
+// routes
+const userRoute = require("./routes/user.route");
+
 app.get("/", (req, res) => {
-    res.send("Route is working!")
+    res.send("<h1>Hello from HMS server made by UNIECH</h1>")
 })
+
+app.use("/api/v1/user", userRoute);
 
 module.exports = app
