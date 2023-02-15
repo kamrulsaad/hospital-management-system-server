@@ -5,9 +5,9 @@ exports.signupService = async (userInfo) => {
   return user;
 };
 
-// exports.findUserByEmail = async (email) => {
-//   return await User.findOne({ email });
-// };
+exports.findUserByEmail = async (email) => {
+  return await User.findOne({ email });
+};
 
 // exports.findUserByToken = async (token) => {
 //   return await User.findOne({ confirmationToken: token });

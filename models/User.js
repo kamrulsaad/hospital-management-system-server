@@ -9,7 +9,7 @@ const userSchema = mongoose.Schema(
             type: String,
             required: [true, "Please provide your phone number."],
             trim: true,
-            unique: [true, "Please provide a unique phone number"],
+            unique: [true, "There exists an account already with {VALUE}"],
             validate: [validator.isMobilePhone, "Please provide a valid contact number"],
         },
 
@@ -25,16 +25,16 @@ const userSchema = mongoose.Schema(
                         minUppercase: 1,
                         minSymbols: 1,
                     }),
-                message: "Password {VALUE} is not strong enough.",
+                message: "Password is not strong enough.",
             },
         },
 
         email: {
             type: String,
-            validate: [validator.isEmail, "Provide a valid Email"],
+            validate: [validator.isEmail, "Please provide a valid Email"],
             trim: true,
             lowercase: true,
-            unique: [true, "Please provide a unique email adress"],
+            unique: [true, "There exists an account already with {VALUE}"],
             required: [true, "Email address is required"],
         },
 
@@ -97,10 +97,10 @@ userSchema.pre("save", function (next) {
     next();
 });
 
-// userSchema.methods.comparePassword = function (password, hash) {
-//     const isPasswordValid = bcrypt.compareSync(password, hash);
-//     return isPasswordValid;
-// };
+userSchema.methods.comparePassword = function (password, hash) {
+    const isPasswordValid = bcrypt.compareSync(password, hash);
+    return isPasswordValid;
+};
 
 // userSchema.methods.generateConfirmationToken = function () {
 //     const token = crypto.randomBytes(32).toString("hex");
@@ -114,27 +114,6 @@ userSchema.pre("save", function (next) {
 
 //     return token;
 // };
-
-//mongoose middleware for saving data
-
-// productSchema.pre('save', function (next) {
-//     console.log('Before saving data')
-//     if (this.quantity === 0) {
-//         this.status = "Out of Stock"
-//     }
-//     next()
-// })
-
-// productSchema.post('save', function (doc, next) {
-//     console.log("After saving Data");
-//     next()
-// })
-
-// productSchema.methods.logger = function(){
-//     console.log(`Data saved for ${this.name}`)
-// }
-
-// Schema -> Model -> Query
 
 const User = mongoose.model("User", userSchema)
 
