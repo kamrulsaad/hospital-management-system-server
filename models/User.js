@@ -71,8 +71,8 @@ const userSchema = mongoose.Schema(
             enum: ["active", "inactive", "blocked"],
         },
 
-        // confirmationToken: String,
-        // confirmationTokenExpires: Date,
+        confirmationToken: String,
+        confirmationTokenExpires: Date,
 
         // passwordChangedAt: Date,
         // passwordResetToken: String,
@@ -102,18 +102,19 @@ userSchema.methods.comparePassword = function (password, hash) {
     return isPasswordValid;
 };
 
-// userSchema.methods.generateConfirmationToken = function () {
-//     const token = crypto.randomBytes(32).toString("hex");
+userSchema.methods.generateConfirmationToken = function () {
+    const token = crypto.randomBytes(32).toString("hex");
 
-//     this.confirmationToken = token;
+    this.confirmationToken = token;
 
-//     const date = new Date();
+    const date = new Date();
 
-//     date.setDate(date.getDate() + 1);
-//     this.confirmationTokenExpires = date;
+    date.setDate(date.getDate() + 1);
 
-//     return token;
-// };
+    this.confirmationTokenExpires = date;
+
+    return token;
+};
 
 const User = mongoose.model("User", userSchema)
 
