@@ -102,19 +102,19 @@ userSchema.methods.comparePassword = function (password, hash) {
     return isPasswordValid;
 };
 
-userSchema.methods.generateConfirmationToken = function () {
-    const token = crypto.randomBytes(32).toString("hex");
+// userSchema.methods.generateConfirmationToken = function () {
+//     const token = crypto.randomBytes(32).toString("hex");
 
-    this.confirmationToken = token;
+//     this.confirmationToken = token;
 
-    const date = new Date();
+//     const date = new Date();
 
-    date.setDate(date.getDate() + 1);
+//     date.setDate(date.getDate() + 1);
 
-    this.confirmationTokenExpires = date;
+//     this.confirmationTokenExpires = date;
 
-    return token;
-};
+//     return token;
+// };
 
 const User = mongoose.model("User", userSchema)
 

@@ -1,52 +1,48 @@
 const { signupService, findUserByEmail, findUserByToken } = require("../services/user.service");
-const { sendMailWithGmail, sendMailWithMailGun } = require("../utils/email");
+// const { sendMailWithMailGun } = require("../utils/email");
 const { generateToken } = require("../utils/token");
 
 exports.signup = async (req, res) => {
   try {
+
+    const { role } = req.body
+
+    if (role !== 'admin' && role !== 'super-admin') {
+      return res.status(403).json({
+        status: "fail",
+        error: "Only admins can create account for " + role
+      })
+    }
+
     const user = await signupService(req.body);
 
-    const token = user.generateConfirmationToken();
+    // const token = user.generateConfirmationToken();
 
     await user.save({ validateBeforeSave: false });
-    
-    // await user.save();
-    
-    const mailData = {
-      to: [user.email],
-      subject: "Verify your Account",
-      text: `Thank you for creating your account. Please confirm your account here: ${
-        req.protocol
-      }://${req.get("host")}${req.originalUrl}/confirmation/${token}`,
-    };
 
-    await sendMailWithMailGun(mailData);
+    // await user.save();
+
+    // const mailData = {
+    //   to: [user.email],
+    //   subject: "Verify your Account",
+    //   text: `Thank you for creating your account. Please confirm your account here: ${
+    //     req.protocol
+    //   }://${req.get("host")}${req.originalUrl}/confirmation/${token}`,
+    // };
+
+    // await sendMailWithMailGun(mailData);
 
     res.status(200).json({
       status: "success",
       message: "Successfully signed up",
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       status: "fail",
       error,
     });
   }
 };
-
-/**
- * 1. Check if Email and password are given
- * 2. Load user with email
- * 3. if not user send res
- * 4. compare password
- * 5. if password not correct send res
- * 6. check if user is active
- * 7. if not active send res
- * 8. generate token
- * 9. send user and token
- */
-
 
 exports.login = async (req, res) => {
   try {
@@ -78,12 +74,12 @@ exports.login = async (req, res) => {
       });
     }
 
-    if (user.status != "active") {
-      return res.status(401).json({
-        status: "fail",
-        error: "Your account is not active yet.",
-      });
-    }
+    // if (user.status != "active") {
+    //   return res.status(401).json({
+    //     status: "fail",
+    //     error: "Your account is not active yet.",
+    //   });
+    // }
 
     const token = generateToken(user);
 
@@ -109,7 +105,7 @@ exports.getMe = async (req, res) => {
   try {
     const user = await findUserByEmail(req.user?.email);
 
-    const { password: pwd, ...others } = user.toObject();    
+    const { password: pwd, ...others } = user.toObject();
 
     res.status(200).json({
       status: "success",
@@ -123,44 +119,71 @@ exports.getMe = async (req, res) => {
   }
 };
 
-exports.confirmEmail = async (req, res) => {
+exports.staffSignUp = async (req, res) => {
   try {
-    const { token } = req.params;
 
-
-    const user = await findUserByToken(token);
-
-    if(!user){
+    if (!req?.admin) {
       return res.status(403).json({
         status: "fail",
-        error: "Invalid token"
+        error,
       });
     }
 
-    const expired = new Date() > new Date(user.confirmationTokenExpires);
+    const user = await signupService(req.body);
 
-    if(expired){
-      return res.status(401).json({
-        status: "fail",
-        error: "Token expired"
-      });
-    }
-
-    user.status = "active";
-    user.confirmationToken = undefined;
-    user.confirmationTokenExpires = undefined;
-
-    user.save({ validateBeforeSave: false });
+    await user.save({ validateBeforeSave: false });
 
     res.status(200).json({
       status: "success",
-      message: "Successfully activated your account.",
-    });
+      message: req.body.role + " signup successfull"
+    })
+
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       status: "fail",
       error,
     });
   }
-};
+}
+
+// exports.confirmEmail = async (req, res) => {
+//   try {
+//     const { token } = req.params;
+
+
+//     const user = await findUserByToken(token);
+
+//     if(!user){
+//       return res.status(403).json({
+//         status: "fail",
+//         error: "Invalid token"
+//       });
+//     }
+
+//     const expired = new Date() > new Date(user.confirmationTokenExpires);
+
+//     if(expired){
+//       return res.status(401).json({
+//         status: "fail",
+//         error: "Token expired"
+//       });
+//     }
+
+//     user.status = "active";
+//     user.confirmationToken = undefined;
+//     user.confirmationTokenExpires = undefined;
+
+//     user.save({ validateBeforeSave: false });
+
+//     res.status(200).json({
+//       status: "success",
+//       message: "Successfully activated your account.",
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({
+//       status: "fail",
+//       error,
+//     });
+//   }
+// };
