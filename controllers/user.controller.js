@@ -18,7 +18,7 @@ exports.signup = async (req, res) => {
 
     // const token = user.generateConfirmationToken();
 
-    await user.save({ validateBeforeSave: false });
+    await user.save()
 
     // await user.save();
 
