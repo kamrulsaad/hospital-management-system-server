@@ -1,5 +1,4 @@
 const { addNewPatientService } = require("../services/patient.service")
-const { findUserByEmail } = require("../services/user.service")
 
 exports.addNewPatient = async (req, res) => {
     try {

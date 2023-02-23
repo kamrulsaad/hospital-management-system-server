@@ -32,12 +32,6 @@ const patientSchema = mongoose.Schema(
             minLength: [3, "Name must be at least 3 characters."],
             maxLength: [100, "Name is too large"],
         },
-        
-        disease: {
-            type: String,
-            required: [true, "Please provide a disease name"],
-            trim: true
-        },
 
         emergency_contact: {
             name: {
@@ -59,10 +53,10 @@ const patientSchema = mongoose.Schema(
             ref: 'Appointment'
         }],
 
-        // issuedBy: {
-        //     type: mongoose.Schema.Types.ObjectId,
-        //     ref:"User"
-        // }
+        issuedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref:"User"
+        }
     },
     {
         timestamps: true,
