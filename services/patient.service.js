@@ -6,11 +6,11 @@ exports.addNewPatientService = async (patientInfo, user) => {
 
     const {email} = user
         
-    const {_id} = await findUserByEmail(email)
+    const issuedBy = await findUserByEmail(email)
 
     const newPatient = {
         ...patientInfo,
-        issuedBy: _id
+        issuedBy
     }
 
     const patient = await Patient.create(newPatient)
