@@ -76,20 +76,17 @@ const userSchema = mongoose.Schema(
 
         patientAdded: [{
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Patient",
-            default: undefined
+            ref: "Patient"
         }],
 
         userAdded: [{
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            default: undefined
+            ref: "User"
         }],
 
         addedBy : {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            default: undefined
+            ref: "User"
         }
 
 

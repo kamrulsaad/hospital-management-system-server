@@ -17,9 +17,7 @@ exports.addNewPatientService = async (patientInfo, user) => {
     
     const patient = await Patient.create(newPatient)
 
-    const res = await User.updateOne({_id: issuedBy._id}, {$push: {patiendAdded: patient._id}})
-
-    console.log(res);
+    await User.updateOne({_id: issuedBy._id}, {$push: {patientAdded: patient._id}})
 
     return patient;
 };

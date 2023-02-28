@@ -51,7 +51,6 @@ const patientSchema = mongoose.Schema(
         appointments: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Appointment',
-            default: undefined
         }],
 
         issuedBy: {
