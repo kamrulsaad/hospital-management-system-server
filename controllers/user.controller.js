@@ -1,4 +1,4 @@
-const { signupService, findUserByEmail, findUserByToken } = require("../services/user.service");
+const { signupService, findUserByEmail, findUserByToken, updateUser, findAllUserService } = require("../services/user.service");
 // const { sendMailWithMailGun } = require("../utils/email");
 const { generateToken } = require("../utils/token");
 
@@ -83,7 +83,7 @@ exports.login = async (req, res) => {
 
     const token = generateToken(user);
 
-    const { password: pwd, ...others } = user.toObject();
+    const { password: pwd, patientAdded, userAdded, addedBy, ...others } = user.toObject();
 
     res.status(200).json({
       status: "success",
@@ -119,6 +119,22 @@ exports.getMe = async (req, res) => {
   }
 };
 
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await findAllUserService();
+
+    res.status(200).json({
+      status: "success",
+      data: users,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "fail",
+      error,
+    });
+  }
+};
+
 exports.staffSignUp = async (req, res) => {
   try {
 
@@ -129,7 +145,7 @@ exports.staffSignUp = async (req, res) => {
       });
     }
 
-    const user = await signupService(req.body);
+    const user = await signupService({...req.body, addedBy: req.adminId});
 
     await user.save({ validateBeforeSave: false });
 

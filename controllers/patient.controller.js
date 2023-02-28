@@ -1,4 +1,4 @@
-const { addNewPatientService } = require("../services/patient.service")
+const { addNewPatientService, getAllPatientsService } = require("../services/patient.service")
 
 exports.addNewPatient = async (req, res) => {
     try {
@@ -9,7 +9,7 @@ exports.addNewPatient = async (req, res) => {
 
         res.status(200).json({
             status: 'success',
-            message: "ALL OK",
+            message: "Patient registration successful",
             data: patient
         })
 
@@ -20,4 +20,22 @@ exports.addNewPatient = async (req, res) => {
         })
     }
 
+}
+
+exports.getAllPatients = async (req, res) => {
+    try {
+
+        const patients = await getAllPatientsService()
+        res.status(200).json({
+            status: 'success',
+            message: "All Patient info",
+            data: patients
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            status: 'fail',
+            error
+        })
+    }
 }

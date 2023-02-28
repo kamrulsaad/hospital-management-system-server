@@ -15,5 +15,7 @@ router.post("/signup/staff", verifyAdmin, userController.staffSignUp);
 
 router.get("/user-info", verifyToken, userController.getMe);
 
+router.get("/all-user", verifyToken, verifyAdmin, userController.getAllUsers);
+
 
 module.exports = router;

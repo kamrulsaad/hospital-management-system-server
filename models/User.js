@@ -74,6 +74,25 @@ const userSchema = mongoose.Schema(
         confirmationToken: String,
         confirmationTokenExpires: Date,
 
+        patientAdded: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Patient",
+            default: undefined
+        }],
+
+        userAdded: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            default: undefined
+        }],
+
+        addedBy : {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            default: undefined
+        }
+
+
         // passwordChangedAt: Date,
         // passwordResetToken: String,
         // passwordResetExpires: Date,

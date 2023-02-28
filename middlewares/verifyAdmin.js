@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
+const { findUserByEmail } = require("../services/user.service");
 
 module.exports = async (req, res, next) => {
   try {
@@ -13,10 +14,13 @@ module.exports = async (req, res, next) => {
     }
     
 
-    const {role} = await promisify(jwt.verify)(token, process.env.TOKEN_SECRET);
+    const {role, email} = await promisify(jwt.verify)(token, process.env.TOKEN_SECRET);
+
+    const {_id} = await findUserByEmail(email)
 
     if(role === 'admin' || role === 'super-admin'){
-        req.admin = true
+        req.admin = true,
+        req.adminId = _id
     }
 
     next();

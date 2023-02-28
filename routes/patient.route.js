@@ -5,4 +5,6 @@ const router = express.Router();
 
 router.post("/add-new-patient", verifyToken, patientController.addNewPatient);
 
+router.get("/all-patient", verifyToken, patientController.getAllPatients)
+
 module.exports = router;
