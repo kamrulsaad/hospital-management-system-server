@@ -6,8 +6,8 @@ exports.signupService = async (userInfo) => {
   return user;
 };
 
-exports.findUserByEmail = async (email) => {
-  return await User.findOne({ email });
+exports.findUserByEmailService = async (email) => {
+  return await User.findOne({ email }, { userAdded: 0, patientAdded: 0});
 };
 
 exports.findAllUserService = async () => {
@@ -22,7 +22,7 @@ exports.findAllUserService = async () => {
             {
               password: 0,
               addedBy: 0,
-              userAdded:0,
+              userAdded: 0,
               patientAdded: 0
             }
           }

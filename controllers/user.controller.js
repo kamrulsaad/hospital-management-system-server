@@ -1,4 +1,4 @@
-const { signupService, findUserByEmail, findUserByToken, updateUser, findAllUserService } = require("../services/user.service");
+const { signupService, findAllUserService, findUserByEmailService } = require("../services/user.service");
 // const { sendMailWithMailGun } = require("../utils/email");
 const { generateToken } = require("../utils/token");
 
@@ -55,7 +55,7 @@ exports.login = async (req, res) => {
       });
     }
 
-    const user = await findUserByEmail(email);
+    const user = await findUserByEmailService(email);
 
     if (!user) {
       return res.status(401).json({
@@ -83,13 +83,13 @@ exports.login = async (req, res) => {
 
     const token = generateToken(user);
 
-    const { password: pwd, patientAdded, userAdded, addedBy, ...others } = user.toObject();
+    const {password: pwd, ...others} = user.toObject()
 
     res.status(200).json({
       status: "success",
       message: "Successfully logged in",
       data: {
-        user: others,
+        data: others,
         token,
       },
     });
@@ -103,9 +103,9 @@ exports.login = async (req, res) => {
 
 exports.getMe = async (req, res) => {
   try {
-    const user = await findUserByEmail(req.user?.email);
+    const user = await findUserByEmailService(req.user?.email);
 
-    const { password: pwd, ...others } = user.toObject();
+    const {password, ...others} = user.toObject()
 
     res.status(200).json({
       status: "success",
