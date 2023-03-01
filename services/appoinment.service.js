@@ -1,12 +1,13 @@
 const Appointment = require("../models/Appointment")
 const { findPatientbyId } = require("./patient.service")
 
-exports.addAppoinmentService = async(info) => {
+exports.addAppoinmentService = async (apptinfo) => {
 
-    const patient = await findPatientbyId(info.patientId)
+    const patient = await findPatientbyId(apptinfo.patientId)
 
-    info = {...info, patient}
-
-    const appointment = await Appointment.create(info)
+    apptinfo = { ...apptinfo, patient }
+    
+    const appointment = await Appointment.create(apptinfo)
+    
     return appointment
 }

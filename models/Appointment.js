@@ -35,7 +35,7 @@ const appointmentSchema = mongoose.Schema({
 
     payment: {
         type: Number,
-        required: [true, "Please insert the value paid by patient"]
+        required: [true, "Please insert the amount paid by patient"]
     },
     tests: [String]
 
