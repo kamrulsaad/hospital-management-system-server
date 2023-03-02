@@ -1,0 +1,74 @@
+[
+    {
+        "data": "user"
+    },
+    {
+        "_id": "63ff050183a2d81442691e76",
+        "phone": "0161231227",
+        "email": "saad@uniech.com",
+        "role": "super-admin",
+        "firstName": "Kamrul",
+        "lastName": "Saad",
+        "status": "inactive",
+        "patientAdded": [],
+        "userAdded": [
+            {
+                "_id": "6400d3c58300fe0f3d8092b0",
+                "phone": "01223344556",
+                "email": "kabir@uniech.com",
+                "role": "receptionist",
+                "firstName": "Kabir",
+                "lastName": "Alam",
+                "status": "inactive",
+                "createdAt": "2023-03-02T16:50:13.473Z",
+                "updatedAt": "2023-03-02T16:50:13.473Z",
+                "__v": 0
+            },
+            {
+                "_id": "6400d4f183f4eafcaa197f9a",
+                "phone": "01223344557",
+                "email": "ferdous@uniech.com",
+                "role": "doctor",
+                "firstName": "Ferdous",
+                "lastName": "Chowdhury",
+                "status": "inactive",
+                "createdAt": "2023-03-02T16:55:13.331Z",
+                "updatedAt": "2023-03-02T16:55:13.331Z",
+                "__v": 0
+            }
+        ],
+        "createdAt": "2023-03-01T07:55:45.232Z",
+        "updatedAt": "2023-03-02T16:55:13.453Z",
+        "__v": 0
+    },
+    {
+        "_id": "6400d3c58300fe0f3d8092b0",
+        "phone": "01223344556",
+        "email": "kabir@uniech.com",
+        "role": "receptionist",
+        "firstName": "Kabir",
+        "lastName": "Alam",
+        "status": "inactive",
+        "patientAdded": [],
+        "userAdded": [],
+        "addedBy": "63ff050183a2d81442691e76",
+        "createdAt": "2023-03-02T16:50:13.473Z",
+        "updatedAt": "2023-03-02T16:50:13.473Z",
+        "__v": 0
+    },
+    {
+        "_id": "6400d4f183f4eafcaa197f9a",
+        "phone": "01223344557",
+        "email": "ferdous@uniech.com",
+        "role": "doctor",
+        "firstName": "Ferdous",
+        "lastName": "Chowdhury",
+        "status": "inactive",
+        "patientAdded": [],
+        "userAdded": [],
+        "addedBy": "63ff050183a2d81442691e76",
+        "createdAt": "2023-03-02T16:55:13.331Z",
+        "updatedAt": "2023-03-02T16:55:13.331Z",
+        "__v": 0
+    }
+]

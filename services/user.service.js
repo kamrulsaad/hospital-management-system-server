@@ -7,7 +7,35 @@ exports.signupService = async (userInfo) => {
 };
 
 exports.findUserByEmailService = async (email) => {
-  return await User.findOne({ email }, { userAdded: 0, patientAdded: 0});
+  return await User.findOne({ email }, { userAdded: 0, patientAdded: 0 });
+};
+
+exports.getUserInfoService = async (email) => {
+  return await User.findOne({ email }).populate(
+    [
+      {
+        path: "userAdded",
+        options: {
+          projection:
+          {
+            password: 0,
+            addedBy: 0,
+            userAdded: 0,
+            patientAdded: 0
+          }
+        }
+      },
+      {
+        path: "patientAdded",
+        options: {
+          projection:
+          {
+            issuedBy: 0,
+          }
+        }
+      },
+    ]
+  );
 };
 
 exports.findAllUserService = async () => {

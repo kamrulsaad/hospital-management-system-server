@@ -1,4 +1,4 @@
-const { signupService, findAllUserService, findUserByEmailService } = require("../services/user.service");
+const { signupService, findAllUserService, findUserByEmailService, getUserInfoService } = require("../services/user.service");
 const { generateToken } = require("../utils/token");
 
 exports.login = async (req, res) => {
@@ -40,7 +40,7 @@ exports.login = async (req, res) => {
 
     const token = generateToken(user);
 
-    const {password: pwd, ...others} = user.toObject()
+    const { password: pwd, ...others } = user.toObject()
 
     res.status(200).json({
       status: "success",
@@ -60,9 +60,9 @@ exports.login = async (req, res) => {
 
 exports.getMe = async (req, res) => {
   try {
-    const user = await findUserByEmailService(req.user?.email);
+    const user = await getUserInfoService(req.user?.email);
 
-    const {password, ...others} = user.toObject()
+    const { password, ...others } = user.toObject()
 
     res.status(200).json({
       status: "success",
@@ -78,6 +78,14 @@ exports.getMe = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
   try {
+
+    if (!req?.admin) {
+      return res.status(403).json({
+        status: "fail",
+        message: "You cannot access this data",
+      });
+    }
+
     const users = await findAllUserService();
 
     res.status(200).json({
@@ -98,11 +106,11 @@ exports.staffSignUp = async (req, res) => {
     if (!req?.admin) {
       return res.status(403).json({
         status: "fail",
-        error,
+        message: "You cannot create accout for a " + req.body.role,
       });
     }
 
-    const user = await signupService({...req.body, addedBy: req.adminId});
+    const user = await signupService({ ...req.body, addedBy: req.adminId });
 
     await user.save({ validateBeforeSave: false });
 
