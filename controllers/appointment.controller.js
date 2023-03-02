@@ -1,4 +1,4 @@
-const { addAppoinmentService, allApptService } = require("../services/appoinment.service")
+const { addAppoinmentService, allApptService, apptByIdService } = require("../services/appoinment.service")
 
 exports.addAppointment = async (req, res) => {
     try {
@@ -33,6 +33,23 @@ exports.allAppointments = async (req, res) => {
             status: "success",
             message: 'All appointments',
             data: appointments
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            status: 'fail',
+            error
+        })
+    }
+}
+
+exports.findApptById = async (req, res) => {
+    try {
+        const appointment = await apptByIdService(req.params.apptId)
+
+        res.status(200).json({
+            status: "success",
+            data: appointment
         })
 
     } catch (error) {
