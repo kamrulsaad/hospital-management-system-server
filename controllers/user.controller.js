@@ -1,48 +1,5 @@
 const { signupService, findAllUserService, findUserByEmailService } = require("../services/user.service");
-// const { sendMailWithMailGun } = require("../utils/email");
 const { generateToken } = require("../utils/token");
-
-exports.signup = async (req, res) => {
-  try {
-
-    const { role } = req.body
-
-    if (role !== 'admin' && role !== 'super-admin') {
-      return res.status(403).json({
-        status: "fail",
-        error: "Only admins can create account for " + role
-      })
-    }
-
-    const user = await signupService(req.body);
-
-    // const token = user.generateConfirmationToken();
-
-    await user.save()
-
-    // await user.save();
-
-    // const mailData = {
-    //   to: [user.email],
-    //   subject: "Verify your Account",
-    //   text: `Thank you for creating your account. Please confirm your account here: ${
-    //     req.protocol
-    //   }://${req.get("host")}${req.originalUrl}/confirmation/${token}`,
-    // };
-
-    // await sendMailWithMailGun(mailData);
-
-    res.status(200).json({
-      status: "success",
-      message: "Successfully signed up",
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: "fail",
-      error,
-    });
-  }
-};
 
 exports.login = async (req, res) => {
   try {

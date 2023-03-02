@@ -4,14 +4,9 @@ const verifyAdmin = require("../middlewares/verifyAdmin");
 const verifyToken = require("../middlewares/verifyToken");
 const router = express.Router();
 
-
-router.post("/signup", userController.signup);
-
-// router.get("/signup/confirmation/:token", userController.confirmEmail);
-
 router.post("/login", userController.login);
 
-router.post("/signup/staff", verifyAdmin, userController.staffSignUp);
+router.post("/signup", verifyAdmin, userController.staffSignUp);
 
 router.get("/user-info", verifyToken, userController.getMe);
 
