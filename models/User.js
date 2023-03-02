@@ -84,6 +84,11 @@ const userSchema = mongoose.Schema(
             ref: "User"
         }],
 
+        appointments: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Appointment"
+        }],
+
         addedBy : {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"

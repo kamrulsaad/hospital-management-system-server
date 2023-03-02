@@ -21,34 +21,10 @@ exports.addNewPatientService = async (patientInfo, user) => {
     return patient;
 };
 
-exports.findPatientbyId = async (_id) => {
-    return await Patient.findById(_id).populate({
-        path: "issuedBy",
-        options: {
-            projection:
-            {
-                password: 0,
-                addedBy: 0,
-                userAdded: 0,
-                patientAdded: 0
-            }
-        }
-    }
-    )
+exports.findPatientbyIdService = async (_id) => {
+    return await Patient.findById(_id)
 }
 
 exports.getAllPatientsService = async () => {
-    return await Patient.find({}).populate({
-        path: "issuedBy",
-        options: {
-            projection:
-            {
-                password: 0,
-                addedBy: 0,
-                userAdded: 0,
-                patientAdded: 0
-            }
-        }
-    }
-    )
+    return await Patient.find({}).select('name phone')
 }

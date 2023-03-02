@@ -5,7 +5,7 @@ exports.addAppointment = async (req, res) => {
 
         const { patientId } = req.params
 
-        req.body.patientId = patientId
+        req.body.patient = patientId
 
         const appointment = await addAppoinmentService(req.body)
 

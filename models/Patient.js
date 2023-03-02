@@ -18,16 +18,9 @@ const patientSchema = mongoose.Schema(
             lowercase: true,
         },
 
-        firstName: {
+        name: {
             type: String,
             required: [true, "Please provide a first name"],
-            trim: true,
-            minLength: [3, "Name must be at least 3 characters."],
-            maxLength: [100, "Name is too large"],
-        },
-        lastName: {
-            type: String,
-            required: [true, "Please provide a last name"],
             trim: true,
             minLength: [3, "Name must be at least 3 characters."],
             maxLength: [100, "Name is too large"],

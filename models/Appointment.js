@@ -13,12 +13,6 @@ const appointmentSchema = mongoose.Schema({
         trim: true
     },
 
-    doctor: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        // required: true
-    },
-
     diagnosis: {
         type: String,
         trim: true,
@@ -32,6 +26,12 @@ const appointmentSchema = mongoose.Schema({
     ],
 
     followUp: Date,
+
+    appointed_to: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
 
     payment: {
         type: Number,
