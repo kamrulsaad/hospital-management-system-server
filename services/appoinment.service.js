@@ -19,3 +19,10 @@ exports.addAppoinmentService = async (apptinfo) => {
 
     return appointment
 }
+
+exports.allApptService = async (req, res) => {
+    return await Appointment.find({}).populate({
+        path: "patient",
+        select: "name phone"
+    }).select("disease")
+}

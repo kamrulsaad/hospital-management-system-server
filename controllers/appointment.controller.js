@@ -1,4 +1,4 @@
-const { addAppoinmentService } = require("../services/appoinment.service")
+const { addAppoinmentService, allApptService } = require("../services/appoinment.service")
 
 exports.addAppointment = async (req, res) => {
     try {
@@ -15,6 +15,24 @@ exports.addAppointment = async (req, res) => {
             status: "success",
             message: 'Appointment is booked',
             data: appointment
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            status: 'fail',
+            error
+        })
+    }
+}
+
+exports.allAppointments = async (req, res) => {
+    try {
+        const appointments = await allApptService()
+
+        res.status(200).json({
+            status: "success",
+            message: 'All appointments',
+            data: appointments
         })
 
     } catch (error) {
