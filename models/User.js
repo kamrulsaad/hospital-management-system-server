@@ -74,9 +74,9 @@ const userSchema = mongoose.Schema(
         confirmationToken: String,
         confirmationTokenExpires: Date,
 
-        patientAdded: [{
+        appointments_issued: [{
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Patient"
+            ref: "Appointment"
         }],
 
         userAdded: [{

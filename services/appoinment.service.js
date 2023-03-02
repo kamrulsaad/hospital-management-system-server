@@ -20,6 +20,8 @@ exports.addAppoinmentService = async (apptinfo, user) => {
 
     await User.updateOne({ _id: appointment.appointed_to }, { $push: { appointments: appointment._id } })
 
+    await User.updateOne({ _id: issuedBy._id }, { $push: { appointments_issued: appointment._id } })
+
     await Patient.updateOne({ _id }, { $push: { appointments: appointment._id } })
 
     return appointment
