@@ -10,6 +10,10 @@ exports.findUserByEmailService = async (email) => {
   return await User.findOne({ email }, { userAdded: 0, patientAdded: 0 });
 };
 
+exports.getAllDoctorsService = async () => {
+  return await User.find({role: "doctor"}).select("firstName lastName");
+};
+
 exports.getUserInfoService = async (email) => {
   return await User.findOne({ email }).populate(
     [

@@ -10,6 +10,8 @@ router.post("/signup", verifyAdmin, userController.staffSignUp);
 
 router.get("/user-info", verifyToken, userController.getMe);
 
+router.get("/all-doctors", verifyToken, userController.getAllDoctors)
+
 router.get("/all-user", verifyToken, verifyAdmin, userController.getAllUsers);
 
 
