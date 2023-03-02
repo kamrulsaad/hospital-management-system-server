@@ -7,14 +7,16 @@ exports.addAppointment = async (req, res) => {
 
         req.body.patient = patientId
 
-        const appointment = await addAppoinmentService(req.body)
+        const appointment = await addAppoinmentService(req.body, req.user)
 
         appointment.save()
+
+        const {issuedBy, ...others} = appointment.toObject()
 
         res.status(200).json({
             status: "success",
             message: 'Appointment is booked',
-            data: appointment
+            data: others
         })
 
     } catch (error) {

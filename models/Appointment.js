@@ -13,6 +13,12 @@ const appointmentSchema = mongoose.Schema({
         trim: true
     },
 
+    issuedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"User",
+        required: true
+    },
+
     diagnosis: {
         type: String,
         trim: true,

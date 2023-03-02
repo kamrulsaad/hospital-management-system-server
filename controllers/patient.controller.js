@@ -3,7 +3,7 @@ const { addNewPatientService, getAllPatientsService } = require("../services/pat
 exports.addNewPatient = async (req, res) => {
     try {
 
-        const patient = await addNewPatientService(req.body, req.user)
+        const patient = await addNewPatientService(req.body)
 
         patient.save()
 

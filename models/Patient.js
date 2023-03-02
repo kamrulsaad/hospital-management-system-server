@@ -44,12 +44,7 @@ const patientSchema = mongoose.Schema(
         appointments: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Appointment',
-        }],
-
-        issuedBy: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref:"User"
-        }
+        }]
     },
     {
         timestamps: true,

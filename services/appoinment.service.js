@@ -1,19 +1,24 @@
 const Appointment = require("../models/Appointment")
 const Patient = require("../models/Patient")
-const Doctor = require('../models/User')
+const User = require("../models/User")
 const { findPatientbyIdService } = require("./patient.service")
+const { findUserByEmailService } = require("./user.service")
 
-exports.addAppoinmentService = async (apptinfo) => {
+exports.addAppoinmentService = async (apptinfo, user) => {
+
+    const {email} = user
+
+    const issuedBy = await findUserByEmailService(email)
 
     const { patient: _id } = apptinfo
 
     const patient = await findPatientbyIdService(_id)
 
-    apptinfo = { ...apptinfo, patient }
+    apptinfo = { ...apptinfo, patient, issuedBy }
 
     const appointment = await Appointment.create(apptinfo)
 
-    await Doctor.updateOne({ _id: appointment.appointed_to }, { $push: { appointments: appointment._id } })
+    await User.updateOne({ _id: appointment.appointed_to }, { $push: { appointments: appointment._id } })
 
     await Patient.updateOne({ _id }, { $push: { appointments: appointment._id } })
 
