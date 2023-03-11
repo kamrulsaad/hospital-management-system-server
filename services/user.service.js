@@ -28,16 +28,7 @@ exports.getUserInfoService = async (email) => {
             patientAdded: 0
           }
         }
-      },
-      {
-        path: "patientAdded",
-        options: {
-          projection:
-          {
-            issuedBy: 0,
-          }
-        }
-      },
+      }
     ]
   );
 };
