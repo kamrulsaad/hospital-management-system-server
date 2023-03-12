@@ -12,7 +12,7 @@ const logger = createLogger({
             level: 'info',
             db: process.env.DB_LOCAL,
             options: { useUnifiedTopology: true },
-            format: format.combine(format.timestamp(), format.json())
+            format: format.combine(format.timestamp())
         })
     ]
 })

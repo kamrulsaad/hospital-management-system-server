@@ -9,7 +9,7 @@ app.use(cors())
 app.use((req, res, next) => {
     let oldData = res.send
     res.send = function (data) {
-        logger.info(JSON.parse(data))
+        logger.info(data);
         oldData.apply(res, arguments)
     }
     next()
