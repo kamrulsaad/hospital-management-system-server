@@ -7,4 +7,6 @@ router.post("/add-new-patient", verifyToken, patientController.addNewPatient);
 
 router.get("/all-patient", verifyToken, patientController.getAllPatients)
 
+router.get("/:patientId", verifyToken, patientController.getPatientById)
+
 module.exports = router;
