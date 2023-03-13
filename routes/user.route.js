@@ -12,7 +12,8 @@ router.get("/user-info", verifyToken, userController.getMe);
 
 router.get("/all-doctors", verifyToken, userController.getAllDoctors)
 
-router.get("/all-user", verifyToken, verifyAdmin, userController.getAllUsers);
+router.get("/all-user", verifyAdmin, userController.getAllUsers);
 
+router.get("/:userId", verifyAdmin, userController.getUserById);
 
 module.exports = router;

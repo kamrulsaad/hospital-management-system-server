@@ -1,4 +1,10 @@
-const { signupService, findAllUserService, findUserByEmailService, getUserInfoService, getAllDoctorsService } = require("../services/user.service");
+const {
+  signupService,
+  findAllUserService,
+  findUserByEmailService,
+  getUserInfoService,
+  getAllDoctorsService,
+  getUserByIdService } = require("../services/user.service");
 const { generateToken } = require("../utils/token");
 
 exports.login = async (req, res) => {
@@ -100,6 +106,24 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
+exports.getUserById = async (req, res) => {
+  try {
+    const { userId } = req.params
+
+    const user = await getUserByIdService(userId)
+
+    res.status(200).json({
+      status: "success",
+      data: user
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "fail",
+      error,
+    });
+  }
+}
+
 exports.staffSignUp = async (req, res) => {
   try {
 
@@ -136,7 +160,7 @@ exports.getAllDoctors = async (req, res) => {
       status: "success",
       data: doctors
     })
-    
+
   } catch (error) {
     res.status(500).json({
       status: "fail",

@@ -11,7 +11,7 @@ exports.findUserByEmailService = async (email) => {
 };
 
 exports.getAllDoctorsService = async () => {
-  return await User.find({role: "doctor"}).select("firstName lastName");
+  return await User.find({ role: "doctor" }).select("firstName lastName");
 };
 
 exports.getUserInfoService = async (email) => {
@@ -34,33 +34,11 @@ exports.getUserInfoService = async (email) => {
 };
 
 exports.findAllUserService = async () => {
-  return await User.
-    find({}, { password: 0 })
-    .populate(
-      [
-        {
-          path: "userAdded",
-          options: {
-            projection:
-            {
-              password: 0,
-              addedBy: 0,
-              userAdded: 0,
-              patientAdded: 0
-            }
-          }
-        },
-        {
-          path: "patientAdded",
-          options: {
-            projection:
-            {
-              issuedBy: 0,
-            }
-          }
-        },
-      ]
-    )
+  return await User.find({}).select("firstName lastName role email");
+}
+
+exports.getUserByIdService = async (_id) => {
+  return await User.findById(_id, {password: 0}).populate('addedBy', 'firstName lastName role email')
 }
 
 // exports.findUserByToken = async (token) => {

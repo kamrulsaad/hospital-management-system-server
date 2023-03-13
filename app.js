@@ -6,14 +6,15 @@ const logger = require('./utils/logger');
 // middlewares
 app.use(express.json())
 app.use(cors())
-app.use((req, res, next) => {
-    let oldData = res.send
-    res.send = function (data) {
-        logger.info(data);
-        oldData.apply(res, arguments)
-    }
-    next()
-})
+
+// app.use((req, res, next) => {
+//     let oldData = res.send
+//     res.send = function (data) {
+//         logger.info(data);
+//         oldData.apply(res, arguments)
+//     }
+//     next()
+// })
 
 // routes
 const userRoute = require("./routes/user.route");
