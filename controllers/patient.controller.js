@@ -25,11 +25,16 @@ exports.addNewPatient = async (req, res) => {
 exports.getAllPatients = async (req, res) => {
     try {
 
-        const patients = await getAllPatientsService()
+        const { page, limit, startIndex, endIndex } = req.pagination;
+
+        const {patients, total} = await getAllPatientsService(req.pagination)
+
+
         res.status(200).json({
             status: 'success',
             message: "All Patient info",
-            data: patients
+            data: patients,
+            page, limit, startIndex, endIndex, total
         })
 
     } catch (error) {

@@ -44,7 +44,11 @@ exports.findAllUserService = async (pagination) => {
 
   const { limit, startIndex } = pagination;
 
-  return await User.find({}).select("firstName lastName role email").skip(startIndex).limit(limit);;
+  const total = await User.countDocuments()
+
+  const users = await User.find({}).select("firstName lastName role email").skip(startIndex).limit(limit);
+
+  return {users, total}
 }
 
 exports.getUserByIdService = async (_id) => {

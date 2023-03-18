@@ -92,7 +92,7 @@ exports.getAllUsers = async (req, res) => {
       });
     }
 
-    const users = await findAllUserService(req.pagination);
+    const {users, total} = await findAllUserService(req.pagination);
 
     const { page, limit, startIndex, endIndex } = req.pagination;
 
@@ -100,6 +100,7 @@ exports.getAllUsers = async (req, res) => {
       status: "success",
       data: users,
       page,
+      total,
       limit,
       startIndex,
       endIndex

@@ -10,6 +10,13 @@ exports.findPatientbyIdService = async (_id) => {
     return await Patient.findById(_id)
 }
 
-exports.getAllPatientsService = async () => {
-    return await Patient.find({}).select('name phone')
+exports.getAllPatientsService = async (pagination) => {
+
+    const {startIndex, limit} = pagination
+
+    const total = await Patient.countDocuments()
+
+    const patients = await Patient.find({}).select('name phone').skip(startIndex).limit(limit);
+
+    return {total, patients}
 }
