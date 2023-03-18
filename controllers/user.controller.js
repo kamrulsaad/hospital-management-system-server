@@ -92,11 +92,17 @@ exports.getAllUsers = async (req, res) => {
       });
     }
 
-    const users = await findAllUserService();
+    const users = await findAllUserService(req.pagination);
+
+    const { page, limit, startIndex, endIndex } = req.pagination;
 
     res.status(200).json({
       status: "success",
       data: users,
+      page,
+      limit,
+      startIndex,
+      endIndex
     });
   } catch (error) {
     res.status(500).json({
@@ -154,11 +160,18 @@ exports.staffSignUp = async (req, res) => {
 exports.getAllDoctors = async (req, res) => {
   try {
 
-    const doctors = await getAllDoctorsService()
+    const {doctors, total} = await getAllDoctorsService(req.pagination)
+
+    const { page, limit, startIndex, endIndex } = req.pagination;
 
     res.status(200).json({
       status: "success",
-      data: doctors
+      data: doctors,
+      total,
+      page,
+      limit,
+      startIndex,
+      endIndex,
     })
 
   } catch (error) {
