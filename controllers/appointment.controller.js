@@ -29,12 +29,16 @@ exports.addAppointment = async (req, res) => {
 
 exports.allAppointments = async (req, res) => {
     try {
-        const appointments = await allApptService()
+
+        const { page, limit, startIndex, endIndex } = req.pagination;
+
+        const {appointments, total} = await allApptService(req.pagination)
 
         res.status(200).json({
             status: "success",
             message: 'All appointments',
-            data: appointments
+            data: appointments,
+            page, limit, startIndex, endIndex, total
         })
 
     } catch (error) {

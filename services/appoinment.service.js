@@ -27,11 +27,18 @@ exports.addAppoinmentService = async (apptinfo, user) => {
     return appointment
 }
 
-exports.allApptService = async () => {
-    return await Appointment.find({}).populate({
+exports.allApptService = async (pagination) => {
+
+    const {startIndex, limit} = pagination
+
+    const total = await Appointment.countDocuments()
+
+    const appointments = await Appointment.find({}).populate({
         path: "patient",
         select: "name phone"
-    }).select("disease")
+    }).select("disease").skip(startIndex).limit(limit);
+
+    return { appointments, total}
 }
 
 exports.apptByIdService = async (id) => {
