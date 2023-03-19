@@ -1,6 +1,5 @@
 const Appointment = require("../models/Appointment")
 const Patient = require("../models/Patient")
-const User = require("../models/User")
 const { findPatientbyIdService } = require("./patient.service")
 const { findUserByEmailService } = require("./user.service")
 
@@ -17,10 +16,6 @@ exports.addAppoinmentService = async (apptinfo, user) => {
     apptinfo = { ...apptinfo, patient, issuedBy }
 
     const appointment = await Appointment.create(apptinfo)
-
-    await User.updateOne({ _id: appointment.appointed_to }, { $push: { appointments: appointment._id } })
-
-    await User.updateOne({ _id: issuedBy._id }, { $push: { appointments_issued: appointment._id } })
 
     await Patient.updateOne({ _id }, { $push: { appointments: appointment._id } })
 
