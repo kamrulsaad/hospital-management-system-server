@@ -143,7 +143,7 @@ exports.staffSignUp = async (req, res) => {
 
     const user = await signupService({ ...req.body, addedBy: req.adminId });
 
-    await user.save({ validateBeforeSave: false });
+    await user.save();
 
     res.status(200).json({
       status: "success",
