@@ -15,7 +15,7 @@ exports.getAllDoctorsService = async (pagination) => {
 
   const total = await User.find({ role: "doctor" }).countDocuments()
 
-  const doctors = await User.find({ role: "doctor" }).select("firstName lastName").skip(startIndex).limit(limit);;
+  const doctors = await User.find({ role: "doctor" }).select("firstName lastName email").skip(startIndex).limit(limit);;
 
   return { total, doctors }
 };

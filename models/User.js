@@ -80,7 +80,8 @@ const userSchema = mongoose.Schema(
             ref: "User"
         },
         serialId: {
-            type: String
+            type: String,
+            unique: true
         }
 
 
