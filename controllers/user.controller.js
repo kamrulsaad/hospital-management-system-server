@@ -100,7 +100,7 @@ exports.updatePass = async (req, res) => {
 
     const updatesPass = user.updatePass(newPassword)
 
-    const result = await updatePassService(updatesPass, user._id)
+    await updatePassService(updatesPass, user._id)
 
     res.status(200).json({
       status: 'success',

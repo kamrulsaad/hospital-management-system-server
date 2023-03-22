@@ -8,9 +8,9 @@ const appointmentSchema = mongoose.Schema({
         required: true
     },
 
-    disease: {
+    reason: {
         type: String,
-        required: [true, "Please provide a disease name"],
+        required: [true, "Please provide a reason for patient's visit"],
         trim: true
     },
 
@@ -45,10 +45,11 @@ const appointmentSchema = mongoose.Schema({
         unique: true
     },
 
-    payment: {
-        type: Number,
-        required: [true, "Please insert the amount paid by patient"]
+    paymentCompleted: {
+        type: Boolean,
+        required: [true, "Please provide patients payment information"]
     },
+    
     tests: [String]
 
 }, {
