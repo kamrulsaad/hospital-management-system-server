@@ -38,13 +38,6 @@ exports.login = async (req, res) => {
       });
     }
 
-    // if (user.status != "active") {
-    //   return res.status(401).json({
-    //     status: "fail",
-    //     error: "Your account is not active yet.",
-    //   });
-    // }
-
     const token = generateToken(user);
 
     const { password: pwd, ...others } = user.toObject()
@@ -60,7 +53,7 @@ exports.login = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       status: "fail",
-      error,
+      error: error.message,
     });
   }
 };
@@ -110,7 +103,7 @@ exports.updatePass = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       status: "fail",
-      error,
+      error: error.message,
     });
   }
 }
@@ -128,7 +121,7 @@ exports.getMe = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       status: "fail",
-      error,
+      error: error.message,
     });
   }
 };
@@ -204,7 +197,7 @@ exports.staffSignUp = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       status: "fail",
-      error,
+      error: error.message,
     });
   }
 }

@@ -1,4 +1,5 @@
-const { addAppoinmentService, allApptService, apptByIdService } = require("../services/appoinment.service")
+const { addAppoinmentService, allApptService, apptByIdService, myApptService } = require("../services/appoinment.service")
+const { findUserByEmailService } = require("../services/user.service")
 
 exports.addAppointment = async (req, res) => {
     try {
@@ -11,7 +12,7 @@ exports.addAppointment = async (req, res) => {
 
         appointment.save()
 
-        const {issuedBy, ...others} = appointment.toObject()
+        const { issuedBy, ...others } = appointment.toObject()
 
         res.status(200).json({
             status: "success",
@@ -32,7 +33,7 @@ exports.allAppointments = async (req, res) => {
 
         const { page, limit, startIndex, endIndex } = req.pagination;
 
-        const {appointments, total} = await allApptService(req.pagination)
+        const { appointments, total } = await allApptService(req.pagination)
 
         res.status(200).json({
             status: "success",
@@ -61,7 +62,31 @@ exports.findApptById = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             status: 'fail',
-            error
+            error: error.message
+        })
+    }
+}
+
+exports.myAppointments = async (req, res) => {
+    try {
+
+        const { page, limit, startIndex, endIndex } = req.pagination;
+
+        const { _id } = await findUserByEmailService(req.user.email)
+
+        const { appointments, total } = await myApptService(req.pagination, _id)
+
+        res.status(200).json({
+            status: "success",
+            message: 'My appointments',
+            data: appointments.length > 0 ? appointments : "No data found",
+            page, limit, startIndex, endIndex, total
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            status: 'fail',
+            error: error.message
         })
     }
 }

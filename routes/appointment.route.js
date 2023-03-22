@@ -6,6 +6,8 @@ const verifyToken = require('../middlewares/verifyToken')
 
 router.get('/all-appointments', verifyToken, paginate, apptController.allAppointments)
 
+router.get('/my-appointments', verifyToken, paginate, apptController.myAppointments)
+
 router.get('/:apptId', verifyToken, apptController.findApptById)
 
 router.post('/:patientId', verifyToken, apptController.addAppointment)

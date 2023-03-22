@@ -77,10 +77,11 @@ const userSchema = mongoose.Schema(
         addedBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
+        },
+        serialId: {
+            type: String,
+            unique: true
         }
-        // passwordChangedAt: Date,
-        // passwordResetToken: String,
-        // passwordResetExpires: Date,
     },
     {
         timestamps: true,
@@ -98,7 +99,32 @@ userSchema.pre("save", function (next) {
     const hashedPassword = bcrypt.hashSync(this.password);
     this.password = hashedPassword;
 
-    next();
+    let doc = this
+
+    if (this.isNew) {
+
+        let currentDate = moment().format('YYYYMMDD');
+
+        mongoose.model('User').findOne({
+            serialId: { $regex: ('^' + currentDate) }
+        },
+            {},
+            { sort: { 'serialId': -1 } },
+            function (err, lastUser) {
+                if (err) {
+                    return next(err);
+                }
+                let serialNumber = currentDate + '00001';
+                if (lastUser) {
+                    let lastSerialNumber = parseInt(lastUser.serialId.substring(8), 10);
+                    serialNumber = currentDate + ('00000' + (lastSerialNumber + 1)).slice(-5);
+                }
+                doc.serialId = serialNumber;
+                next();
+            });
+    } else {
+        next();
+    }
 });
 
 userSchema.methods.comparePassword = function (password, hash) {
@@ -106,7 +132,7 @@ userSchema.methods.comparePassword = function (password, hash) {
     return isPasswordValid;
 };
 
-userSchema.methods.updatePass = function (password) {
+userSchema.methods.updatePass = function (password){
     return bcrypt.hashSync(password)
 }
 

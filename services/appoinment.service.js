@@ -5,13 +5,15 @@ const { findUserByEmailService } = require("./user.service")
 
 exports.addAppoinmentService = async (apptinfo, user) => {
 
-    const {email} = user
+    const { email } = user
 
     const issuedBy = await findUserByEmailService(email)
 
     const { patient: _id } = apptinfo
 
     const patient = await findPatientbyIdService(_id)
+
+    console.log(patient)
 
     apptinfo = { ...apptinfo, patient, issuedBy }
 
@@ -24,16 +26,30 @@ exports.addAppoinmentService = async (apptinfo, user) => {
 
 exports.allApptService = async (pagination) => {
 
-    const {startIndex, limit} = pagination
+    const { startIndex, limit } = pagination
 
     const total = await Appointment.countDocuments()
 
     const appointments = await Appointment.find({}).populate({
         path: "patient",
-        select: "name phone"
-    }).select("disease").skip(startIndex).limit(limit);
+        select: "name phone serialId -_id"
+    }).select("reason").skip(startIndex).limit(limit);
 
-    return { appointments, total}
+    return { appointments, total }
+}
+
+exports.myApptService = async (pagination, appointed_to) => {
+
+    const { startIndex, limit } = pagination
+
+    const total = await Appointment.find({ appointed_to }).countDocuments()
+
+    const appointments = await Appointment.find({ appointed_to }).populate({
+        path: "patient",
+        select: "name phone serialId -_id"
+    }).select("reason").skip(startIndex).limit(limit);
+
+    return { appointments, total }
 }
 
 exports.apptByIdService = async (id) => {
