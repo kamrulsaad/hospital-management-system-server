@@ -18,7 +18,7 @@ exports.login = async (req, res) => {
       });
     }
 
-    const user = await findUserByEmailService(email);
+    const user = await findUserByEmailService(email)
 
     if (!user) {
       return res.status(401).json({
@@ -64,6 +64,54 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.updatePass = async (req, res) => {
+  try {
+
+    const { password, newPassword } = req.body
+
+    if (!newPassword || !password) {
+      return res.status(401).json({
+        status: "fail",
+        error: "Please provide required credentials",
+      });
+    }
+
+    const { email } = req.user;
+
+    const user = await findUserByEmailService(email)
+
+    if (!user) {
+      return res.status(401).json({
+        status: "fail",
+        error: "No user found. Please create an account",
+      });
+    }
+
+    const isPasswordValid = user.comparePassword(password, user.password);
+
+
+    if (!isPasswordValid) {
+      return res.status(403).json({
+        status: "fail",
+        error: "Password is not correct",
+      });
+    }
+
+    if (!password || !newPassword) {
+      return res.status(401).json({
+        status: "fail",
+        error: "Please provide required credentials",
+      });
+    }
+
+  } catch (error) {
+    res.status(500).json({
+      status: "fail",
+      error,
+    });
+  }
+}
+
 exports.getMe = async (req, res) => {
   try {
     const user = await getUserInfoService(req.user?.email);
@@ -92,7 +140,7 @@ exports.getAllUsers = async (req, res) => {
       });
     }
 
-    const {users, total} = await findAllUserService(req.pagination);
+    const { users, total } = await findAllUserService(req.pagination);
 
     const { page, limit, startIndex, endIndex } = req.pagination;
 
@@ -161,7 +209,7 @@ exports.staffSignUp = async (req, res) => {
 exports.getAllDoctors = async (req, res) => {
   try {
 
-    const {doctors, total} = await getAllDoctorsService(req.pagination)
+    const { doctors, total } = await getAllDoctorsService(req.pagination)
 
     const { page, limit, startIndex, endIndex } = req.pagination;
 

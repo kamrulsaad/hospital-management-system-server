@@ -63,7 +63,7 @@ patientSchema.pre("save", function (next) {
 
     if (this.isNew) {
 
-        let currentDate = moment().format('YYYYMMDD');
+        let currentDate = moment().format('YYMMDD');
 
         mongoose.model('Patient').findOne({
             serialId: { $regex: ('^' + currentDate) }
@@ -74,10 +74,10 @@ patientSchema.pre("save", function (next) {
                 if (err) {
                     return next(err);
                 }
-                let serialNumber = currentDate + '00001';
+                let serialNumber = currentDate + 'P' + '00001';
                 if (lastUser) {
                     let lastSerialNumber = parseInt(lastUser.serialId.substring(8), 10);
-                    serialNumber = currentDate + ('00000' + (lastSerialNumber + 1)).slice(-5);
+                    serialNumber = currentDate + "P" + ('00000' + (lastSerialNumber + 1)).slice(-5);
                 }
                 doc.serialId = serialNumber;
                 next();
