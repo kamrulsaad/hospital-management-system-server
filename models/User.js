@@ -138,6 +138,10 @@ userSchema.methods.comparePassword = function (password, hash) {
     return isPasswordValid;
 };
 
+userSchema.methods.updatePass = function (password){
+    return bcrypt.hashSync(password)
+}
+
 // userSchema.methods.generateConfirmationToken = function () {
 //     const token = crypto.randomBytes(32).toString("hex");
 

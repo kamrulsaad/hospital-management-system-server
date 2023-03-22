@@ -4,7 +4,8 @@ const {
   findUserByEmailService,
   getUserInfoService,
   getAllDoctorsService,
-  getUserByIdService } = require("../services/user.service");
+  getUserByIdService, 
+  updatePassService} = require("../services/user.service");
 const { generateToken } = require("../utils/token");
 
 exports.login = async (req, res) => {
@@ -97,12 +98,14 @@ exports.updatePass = async (req, res) => {
       });
     }
 
-    if (!password || !newPassword) {
-      return res.status(401).json({
-        status: "fail",
-        error: "Please provide required credentials",
-      });
-    }
+    const updatesPass = user.updatePass(newPassword)
+
+    const result = await updatePassService(updatesPass, user._id)
+
+    res.status(200).json({
+      status: 'success',
+      message: "Password Updated Successfully"
+    })
 
   } catch (error) {
     res.status(500).json({

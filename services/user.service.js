@@ -23,6 +23,10 @@ exports.getUserInfoService = async (email) => {
   return await User.findOne({ email })
 };
 
+exports.updatePassService = async (password, _id) => {
+  return await User.updateOne({_id}, {password})
+}
+
 exports.findAllUserService = async (pagination) => {
 
   const { limit, startIndex } = pagination;

@@ -9,6 +9,8 @@ router.post("/login", userController.login);
 
 router.post("/signup", verifyAdmin, userController.staffSignUp);
 
+router.post("/update-password", verifyToken, userController.updatePass);
+
 router.get("/user-info", verifyToken, userController.getMe);
 
 router.get("/all-doctors", verifyToken, paginate, userController.getAllDoctors)
