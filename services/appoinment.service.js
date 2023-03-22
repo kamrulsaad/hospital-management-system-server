@@ -53,5 +53,13 @@ exports.myApptService = async (pagination, appointed_to) => {
 }
 
 exports.apptByIdService = async (id) => {
-    return await Appointment.findById(id).populate("patient")
+    return await Appointment.findById(id).populate({
+        path: "patient",
+        select: "name phone serialId -_id"
+    }).select("reason")
+}
+
+exports.updateApptService = async (_id, info) => {
+    console.log(_id)
+    return await Appointment.updateOne({ _id }, { $set: info })
 }

@@ -1,4 +1,4 @@
-const { addAppoinmentService, allApptService, apptByIdService, myApptService } = require("../services/appoinment.service")
+const { addAppoinmentService, allApptService, apptByIdService, myApptService, updateApptService } = require("../services/appoinment.service")
 const { findUserByEmailService } = require("../services/user.service")
 
 exports.addAppointment = async (req, res) => {
@@ -81,6 +81,26 @@ exports.myAppointments = async (req, res) => {
             message: 'My appointments',
             data: appointments.length > 0 ? appointments : "No data found",
             page, limit, startIndex, endIndex, total
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            status: 'fail',
+            error: error.message
+        })
+    }
+}
+
+exports.updateApptInfo = async (req, res) => {
+    try {
+        
+        const result = await updateApptService(req.params.apptId, req.body)
+
+        console.log(result);
+        
+        res.status(200).json({
+            status: "success",
+            message: 'Prescription Updated Successfully'
         })
 
     } catch (error) {

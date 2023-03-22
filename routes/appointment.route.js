@@ -8,7 +8,9 @@ router.get('/all-appointments', verifyToken, paginate, apptController.allAppoint
 
 router.get('/my-appointments', verifyToken, paginate, apptController.myAppointments)
 
-router.get('/:apptId', verifyToken, apptController.findApptById)
+router.route('/:apptId')
+.get(verifyToken, apptController.findApptById)
+.post(verifyToken, apptController.updateApptInfo)
 
 router.post('/:patientId', verifyToken, apptController.addAppointment)
 

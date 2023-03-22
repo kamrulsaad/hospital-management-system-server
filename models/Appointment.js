@@ -20,10 +20,10 @@ const appointmentSchema = mongoose.Schema({
         required: true
     },
 
-    diagnosis: {
+    diagnosis: [{
         type: String,
         trim: true,
-    },
+    }],
 
     medicines: [
         {
@@ -49,7 +49,7 @@ const appointmentSchema = mongoose.Schema({
         type: Boolean,
         required: [true, "Please provide patients payment information"]
     },
-    
+
     tests: [String]
 
 }, {
