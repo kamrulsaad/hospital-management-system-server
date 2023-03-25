@@ -5,6 +5,7 @@ const app = express()
 // middlewares
 app.use(express.json())
 app.use(cors())
+app.use('/images', express.static('images'));
 
 // routes
 const userRoute = require("./routes/user.route");

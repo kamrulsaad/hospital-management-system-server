@@ -8,6 +8,10 @@ exports.findUserByEmailService = async (email) => {
   return await User.findOne({ email }, { userAdded: 0, patientAdded: 0 });
 };
 
+exports.updateImageUrlService = async (email, imageURL) => {
+  return await User.updateOne({ email }, {imageURL})
+}
+
 exports.getAllDoctorsService = async (pagination) => {
 
   const { limit, startIndex } = pagination;
@@ -24,7 +28,7 @@ exports.getUserInfoService = async (email) => {
 };
 
 exports.updatePassService = async (password, _id) => {
-  return await User.updateOne({_id}, {password})
+  return await User.updateOne({ _id }, { password })
 }
 
 exports.findAllUserService = async (pagination) => {

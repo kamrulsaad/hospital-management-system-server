@@ -4,8 +4,9 @@ const {
   findUserByEmailService,
   getUserInfoService,
   getAllDoctorsService,
-  getUserByIdService, 
-  updatePassService} = require("../services/user.service");
+  getUserByIdService,
+  updatePassService,
+  updateImageUrlService } = require("../services/user.service");
 const { generateToken } = require("../utils/token");
 
 exports.login = async (req, res) => {
@@ -57,6 +58,30 @@ exports.login = async (req, res) => {
     });
   }
 };
+
+exports.updateProfilePicture = async (req, res) => {
+  try {
+
+    const { path } = req.file
+
+    const imageURL = process.env.BASE_URL + path
+
+    const { email } = req.user
+
+    await updateImageUrlService(email, imageURL)
+
+    res.status(200).json({
+      status: "success",
+      message: "Profile Picture Updated Sucessfully",
+      imageURL
+    })
+  } catch (error) {
+    res.status(500).json({
+      status: "fail",
+      error: error.message
+    })
+  }
+}
 
 exports.updatePass = async (req, res) => {
   try {
