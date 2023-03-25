@@ -19,6 +19,21 @@ const patientSchema = mongoose.Schema(
             lowercase: true,
         },
 
+        age: {
+            type: Number,
+            required: [true, "Please provide patient's age information"]
+        },
+
+        gender: {
+            type: String,
+            enum: ["Female", "Male", "Others"],
+        }, 
+
+        bloodGroup:{
+            type: String,
+            enum: ['A+', "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"]
+        },
+
         name: {
             type: String,
             required: [true, "Please provide a first name"],

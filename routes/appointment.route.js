@@ -8,10 +8,10 @@ router.get('/all-appointments', verifyToken, paginate, apptController.allAppoint
 
 router.get('/my-appointments', verifyToken, paginate, apptController.myAppointments)
 
+router.post('/add-appointment/:patientId', verifyToken, apptController.addAppointment)
+
 router.route('/:apptId')
 .get(verifyToken, apptController.findApptById)
 .post(verifyToken, apptController.updateApptInfo)
-
-router.post('/:patientId', verifyToken, apptController.addAppointment)
 
 module.exports = router

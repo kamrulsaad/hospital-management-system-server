@@ -46,8 +46,8 @@ exports.myApptService = async (pagination, appointed_to) => {
 
     const appointments = await Appointment.find({ appointed_to }).populate({
         path: "patient",
-        select: "name phone serialId -_id"
-    }).select("reason").skip(startIndex).limit(limit);
+        select: "name phone -_id"
+    }).select("reason serialId").skip(startIndex).limit(limit);
 
     return { appointments, total }
 }
@@ -60,6 +60,5 @@ exports.apptByIdService = async (id) => {
 }
 
 exports.updateApptService = async (_id, info) => {
-    console.log(_id)
     return await Appointment.updateOne({ _id }, { $set: info })
 }

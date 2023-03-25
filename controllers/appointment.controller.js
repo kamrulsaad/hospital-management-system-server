@@ -93,11 +93,9 @@ exports.myAppointments = async (req, res) => {
 
 exports.updateApptInfo = async (req, res) => {
     try {
-        
+
         const result = await updateApptService(req.params.apptId, req.body)
 
-        console.log(result);
-        
         res.status(200).json({
             status: "success",
             message: 'Prescription Updated Successfully'
