@@ -19,11 +19,7 @@ exports.updateImageUrlService = async (req) => {
 
       const previousImagePath = path.join(__dirname, '..', user.imageURL.replace(`${req.protocol}://${req.get('host')}/`, ''));
 
-      fs.unlink(previousImagePath, err => {
-        if (err) {
-          console.error(err);
-        }
-      });
+      fs.unlink(previousImagePath);
     }
   }
 

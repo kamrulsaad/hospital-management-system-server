@@ -1,4 +1,4 @@
-const { addNewPatientService, getAllPatientsService, findPatientbyIdService } = require("../services/patient.service")
+const { addNewPatientService, getAllPatientsService, findPatientbyIdService, deletePatientService } = require("../services/patient.service")
 
 exports.addNewPatient = async (req, res) => {
     try {
@@ -16,7 +16,7 @@ exports.addNewPatient = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             status: 'fail',
-            error
+            error: error.message
         })
     }
 
@@ -27,7 +27,7 @@ exports.getAllPatients = async (req, res) => {
 
         const { page, limit, startIndex, endIndex } = req.pagination;
 
-        const {patients, total} = await getAllPatientsService(req.pagination)
+        const { patients, total } = await getAllPatientsService(req.pagination)
 
 
         res.status(200).json({
@@ -57,7 +57,24 @@ exports.getPatientById = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             status: 'fail',
-            message: "Internal server error"
+            message: error.message
+        })
+    }
+}
+
+exports.deletePatient = async (req, res) => {
+    try {
+
+        await deletePatientService(req.params.patientId)
+
+        res.status(200).json({
+            status: 'success',
+            message: "Patient Deleted Successfully"
+        })
+    } catch (error) {
+        res.status(500).json({
+            status: 'fail',
+            message: error.message
         })
     }
 }

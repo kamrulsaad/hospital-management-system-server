@@ -13,8 +13,6 @@ exports.addAppoinmentService = async (apptinfo, user) => {
 
     const patient = await findPatientbyIdService(_id)
 
-    console.log(patient)
-
     apptinfo = { ...apptinfo, patient, issuedBy }
 
     const appointment = await Appointment.create(apptinfo)

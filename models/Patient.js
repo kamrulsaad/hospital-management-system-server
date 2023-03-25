@@ -91,7 +91,7 @@ patientSchema.pre("save", function (next) {
                 }
                 let serialNumber = currentDate + 'P' + '00001';
                 if (lastUser) {
-                    let lastSerialNumber = parseInt(lastUser.serialId.substring(8), 10);
+                    let lastSerialNumber = parseInt(lastUser.serialId.substring(9), 10);
                     serialNumber = currentDate + "P" + ('00000' + (lastSerialNumber + 1)).slice(-5);
                 }
                 doc.serialId = serialNumber;

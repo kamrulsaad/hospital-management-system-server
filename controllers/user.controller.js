@@ -280,7 +280,6 @@ exports.getAllDoctors = async (req, res) => {
 //       message: "Successfully activated your account.",
 //     });
 //   } catch (error) {
-//     console.log(error);
 //     res.status(500).json({
 //       status: "fail",
 //       error,

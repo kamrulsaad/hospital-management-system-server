@@ -15,7 +15,11 @@ exports.getAllPatientsService = async (pagination) => {
 
     const total = await Patient.countDocuments()
 
-    const patients = await Patient.find({}).select('name phone serialId').sort({"serialId" : -1}).skip(startIndex).limit(limit);
+    const patients = await Patient.find({}).select('name phone serialId age').sort({"serialId" : -1}).skip(startIndex).limit(limit);
 
     return {total, patients}
+}
+
+exports.deletePatientService = async (_id) => {
+    await Patient.deleteOne({_id})
 }

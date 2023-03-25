@@ -73,10 +73,10 @@ appointmentSchema.pre("save", function (next) {
                 if (err) {
                     return next(err);
                 }
-                let serialNumber = currentDate + '00001';
+                let serialNumber = currentDate + "APPT" + '00001';
                 if (lastUser) {
-                    let lastSerialNumber = parseInt(lastUser.serialId.substring(8), 10);
-                    serialNumber = currentDate + ('00000' + (lastSerialNumber + 1)).slice(-5);
+                    let lastSerialNumber = parseInt(lastUser.serialId.substring(13), 10);
+                    serialNumber = currentDate + "APPT" + ('00000' + (lastSerialNumber + 1)).slice(-5);
                 }
                 doc.serialId = serialNumber;
                 next();
