@@ -1,4 +1,6 @@
 const User = require("../models/User");
+const fs = require('fs');
+const path = require('path');
 
 exports.signupService = async (userInfo) => {
   return await User.create(userInfo)
@@ -8,8 +10,30 @@ exports.findUserByEmailService = async (email) => {
   return await User.findOne({ email }, { userAdded: 0, patientAdded: 0 });
 };
 
-exports.updateImageUrlService = async (email, imageURL) => {
-  return await User.updateOne({ email }, {imageURL})
+exports.updateImageUrlService = async (email, imageURL, file) => {
+
+  const user = await User.findOne({ email });
+  const previousImagePath = path.join(__dirname, '..', user.imageURL.replace(`${process.env.BASE_URL}`, ''));
+
+  console.log(previousImagePath)
+
+  // Save the new profile picture URL to the database
+  user.imageURL = file ? `${process.env.BASE_URL}${file.path}` : user.imageURL;
+
+  // Delete the previous profile picture if it exists
+  if (previousImagePath && fs.existsSync(previousImagePath)) {
+    fs.unlink(previousImagePath, err => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log(`Deleted previous profile picture: ${previousImagePath}`);
+      }
+    });
+  }
+
+  await user.save();
+
+  return user.imageURL
 }
 
 exports.getAllDoctorsService = async (pagination) => {

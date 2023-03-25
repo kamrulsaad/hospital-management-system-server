@@ -62,7 +62,6 @@ const userSchema = mongoose.Schema(
 
         imageURL: {
             type: String,
-            validate: [validator.isURL, "Please provide a valid url"],
         },
 
         status: {
@@ -132,7 +131,7 @@ userSchema.methods.comparePassword = function (password, hash) {
     return isPasswordValid;
 };
 
-userSchema.methods.updatePass = function (password){
+userSchema.methods.updatePass = function (password) {
     return bcrypt.hashSync(password)
 }
 

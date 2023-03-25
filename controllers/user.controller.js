@@ -68,12 +68,12 @@ exports.updateProfilePicture = async (req, res) => {
 
     const { email } = req.user
 
-    await updateImageUrlService(email, imageURL)
+    const url = await updateImageUrlService(email, imageURL, req.file)
 
     res.status(200).json({
       status: "success",
       message: "Profile Picture Updated Sucessfully",
-      imageURL
+      url
     })
   } catch (error) {
     res.status(500).json({
