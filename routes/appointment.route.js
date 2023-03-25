@@ -1,6 +1,7 @@
 const express = require('express')
 const apptController = require('../controllers/appointment.controller')
 const paginate = require('../middlewares/paginate')
+const verifyAdmin = require('../middlewares/verifyAdmin')
 const router = express.Router()
 const verifyToken = require('../middlewares/verifyToken')
 
@@ -13,5 +14,6 @@ router.post('/add-appointment/:patientId', verifyToken, apptController.addAppoin
 router.route('/:apptId')
 .get(verifyToken, apptController.findApptById)
 .post(verifyToken, apptController.updateApptInfo)
+.delete(verifyAdmin, apptController.deleteAppointment)
 
 module.exports = router

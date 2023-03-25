@@ -1,4 +1,4 @@
-const { addAppoinmentService, allApptService, apptByIdService, myApptService, updateApptService } = require("../services/appoinment.service")
+const { addAppoinmentService, allApptService, apptByIdService, myApptService, updateApptService, deleteApptIdService } = require("../services/appoinment.service")
 const { findUserByEmailService } = require("../services/user.service")
 
 exports.addAppointment = async (req, res) => {
@@ -94,13 +94,30 @@ exports.myAppointments = async (req, res) => {
 exports.updateApptInfo = async (req, res) => {
     try {
 
-        const result = await updateApptService(req.params.apptId, req.body)
+        await updateApptService(req.params.apptId, req.body)
 
         res.status(200).json({
             status: "success",
             message: 'Prescription Updated Successfully'
         })
 
+    } catch (error) {
+        res.status(500).json({
+            status: 'fail',
+            error: error.message
+        })
+    }
+}
+
+exports.deleteAppointment = async (req, res) => {
+    try {
+
+        await deleteApptIdService(req.params.apptId)
+
+        res.status(200).json({
+            status: "success",
+            message: 'Appointment Info Deleted Successfully'
+        })
     } catch (error) {
         res.status(500).json({
             status: 'fail',

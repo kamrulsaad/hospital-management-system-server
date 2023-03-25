@@ -62,13 +62,7 @@ exports.login = async (req, res) => {
 exports.updateProfilePicture = async (req, res) => {
   try {
 
-    const { path } = req.file
-
-    const imageURL = process.env.BASE_URL + path
-
-    const { email } = req.user
-
-    const url = await updateImageUrlService(email, imageURL, req.file)
+    const url = await updateImageUrlService(req)
 
     res.status(200).json({
       status: "success",
