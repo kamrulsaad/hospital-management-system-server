@@ -11,6 +11,7 @@ app.use('/images', express.static('images'));
 const userRoute = require("./routes/user.route");
 const patientRoute = require('./routes/patient.route');
 const apptRoute = require('./routes/appointment.route');
+const invRoute = require('./routes/inoive.route');
 
 
 app.get("/", (req, res) => {
@@ -20,5 +21,6 @@ app.get("/", (req, res) => {
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/patient", patientRoute);
 app.use("/api/v1/appointment", apptRoute);
+app.use("/api/v1/invoice", invRoute);
 
 module.exports = app
