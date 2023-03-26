@@ -8,16 +8,21 @@ const invoiceSchema = mongoose.Schema({
         required: true
     },
 
-    amount: {
-        type: Number,
-        min: [1, "Amount cannot be less than or equal to zero"],
-        required: [true, "Please provide the total amount paid by Patient"]
-    },
-
-    options: [{
-        type: String,
-        trim: true,
+    payments: [{
+        name: {
+            type: String,
+            required: [true, "Please provide payment option name"]
+        },
+        amount: {
+            type: Number,
+            required: [true, 'Please provide payment amount!'],
+            min: [1, "Payment value cannot be less than or equal to zero"]
+        },
     }],
+
+    total: {
+        type: Number
+    },
 
     serialId: {
         type: String,
@@ -35,6 +40,16 @@ const invoiceSchema = mongoose.Schema({
 })
 
 invoiceSchema.pre("save", function (next) {
+
+    let payments = this.payments
+
+    let total = 0;
+
+    for(const p of payments){
+        total+= p.amount
+    }
+
+    this.total = total
 
     let doc = this
 
