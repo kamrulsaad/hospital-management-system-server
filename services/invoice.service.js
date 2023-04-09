@@ -19,7 +19,7 @@ exports.getAllInvoiceService =  async (pagination) => {
     const invoices =  await Invoice.find({}).populate({
         path: 'patient',
         select: "serialId phone"
-    }).select("serialId amount options").sort({"serialId" : -1}).skip(startIndex).limit(limit);
+    }).select("serialId payments total").sort({"serialId" : -1}).skip(startIndex).limit(limit);
 
     return {
         invoices, total
