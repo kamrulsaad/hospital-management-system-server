@@ -32,3 +32,7 @@ exports.invByIdService = async (id) => {
         select: "serialId phone name"
     }).select("amount options serialId")
 }
+
+exports.deleteInvoiceService = async (_id) => {
+    await Invoice.deleteOne({_id})
+}

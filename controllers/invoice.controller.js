@@ -1,4 +1,4 @@
-const { createInvoiceService, getAllInvoiceService, invByIdService } = require("../services/invoice.service")
+const { createInvoiceService, getAllInvoiceService, invByIdService, deleteInvoiceService } = require("../services/invoice.service")
 
 exports.createInvoice = async (req, res) => {
     try {
@@ -54,6 +54,23 @@ exports.findInvById = async (req, res) => {
         res.status(500).json({
             status: 'fail',
             error: error.message
+        })
+    }
+}
+
+exports.deleteInvoice = async (req, res) => {
+    try {
+
+        await deleteInvoiceService(req.params.invId)
+
+        res.status(200).json({
+            status: 'success',
+            message: "Invoice Deleted Successfully"
+        })
+    } catch (error) {
+        res.status(500).json({
+            status: 'fail',
+            message: error.message
         })
     }
 }

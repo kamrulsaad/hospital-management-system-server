@@ -14,6 +14,6 @@ router.post('/create/:patientId', verifyToken, verifyAccountant, invController.c
 
 router.route('/:invId')
 .get(verifyToken, invController.findInvById)
-// .delete(verifyAdmin, apptController.deleteAppointment)
+.delete(verifyAdmin, invController.deleteInvoice)
 
 module.exports = router
