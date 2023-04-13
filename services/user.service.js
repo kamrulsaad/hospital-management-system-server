@@ -14,52 +14,54 @@ exports.updateImageUrlService = async (req) => {
 
   const user = await User.findOne({ email: req.user.email });
 
-  if (user) {
-    if (user.imageURL) {
-
-      const previousImagePath = path.join(__dirname, '..', user.imageURL.replace(`${req.protocol}://${req.get('host')}/`, ''));
-
-      fs.unlink(previousImagePath);
-    }
+  
+  if (user.imageURL) {
+    
+    const previousImagePath = path.join(__dirname, '..', user.imageURL.replace(`${req.protocol}://${req.get('host')}/`, ''));
+    fs.unlink(previousImagePath, (err) => {
+      if (err) {
+        return err;
+      } 
+    });    
   }
 
-  user.imageURL = `${req.protocol}://${req.get('host')}/${req.file.path}`
+  const url = `${req.protocol}://${req.get('host')}/${req.file.path}`
 
-  await user.save();
+  await User.updateOne({_id: user._id}, {$set: {imageURL: url}})
 
   return user.imageURL
 }
 
-  exports.getAllDoctorsService = async (pagination) => {
+exports.getAllDoctorsService = async (pagination) => {
 
-    const { limit, startIndex } = pagination;
+  const { limit, startIndex } = pagination;
 
-    const total = await User.find({ role: "doctor" }).countDocuments()
+  const total = await User.find({ role: "doctor" }).countDocuments()
 
-    const doctors = await User.find({ role: "doctor" }).select("firstName lastName email").skip(startIndex).limit(limit);;
+  const doctors = await User.find({ role: "doctor" }).select("firstName lastName email").skip(startIndex).limit(limit);;
 
-    return { total, doctors }
-  };
+  return { total, doctors }
+};
 
-  exports.getUserInfoService = async (email) => {
-    return await User.findOne({ email })
-  };
+exports.getUserInfoService = async (email) => {
+  return await User.findOne({ email })
+};
 
-  exports.updatePassService = async (password, _id) => {
-    return await User.updateOne({ _id }, { password })
-  }
+exports.updatePassService = async (password, _id) => {
+  return await User.updateOne({ _id }, { password })
+}
 
-  exports.findAllUserService = async (pagination) => {
+exports.findAllUserService = async (pagination) => {
 
-    const { limit, startIndex } = pagination;
+  const { limit, startIndex } = pagination;
 
-    const total = await User.countDocuments()
+  const total = await User.countDocuments()
 
-    const users = await User.find({}).select("firstName lastName role email").skip(startIndex).limit(limit);
+  const users = await User.find({}).select("firstName lastName role email").skip(startIndex).limit(limit);
 
-    return { users, total }
-  }
+  return { users, total }
+}
 
-  exports.getUserByIdService = async (_id) => {
-    return await User.findById(_id, { password: 0 }).populate('addedBy', 'firstName lastName role email')
-  }
+exports.getUserByIdService = async (_id) => {
+  return await User.findById(_id, { password: 0 }).populate('addedBy', 'firstName lastName role email')
+}
