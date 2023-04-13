@@ -3,6 +3,13 @@ const { createCategoryService, allCategoryService, deleteCategoryService, update
 exports.createCategory = async (req, res) => {
     try {
 
+        if (!req?.admin) {
+            return res.status(403).json({
+                status: "fail",
+                message: "You do not have access to this operation.",
+            });
+        }
+
         const category = await createCategoryService(req.body)
 
         category.save()
@@ -41,6 +48,14 @@ exports.allCategory = async (req, res) => {
 
 exports.deleteCategory = async (req, res) => {
     try {
+
+        if (!req?.admin) {
+            return res.status(403).json({
+                status: "fail",
+                message: "You do not have access to this operation.",
+            });
+        }
+
         await deleteCategoryService(req.params.categoryId)
 
         res.status(200).json({
@@ -58,6 +73,14 @@ exports.deleteCategory = async (req, res) => {
 
 exports.updateCategory = async (req, res) => {
     try {
+
+        if (!req?.admin) {
+            return res.status(403).json({
+                status: "fail",
+                message: "You do not have access to this operation.",
+            });
+        }
+
         await updateCategoryService(req.params.categoryId, req.body)
 
         res.status(200).json({

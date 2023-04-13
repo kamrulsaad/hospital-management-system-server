@@ -65,6 +65,13 @@ exports.getPatientById = async (req, res) => {
 exports.deletePatient = async (req, res) => {
     try {
 
+        if (!req?.admin) {
+            return res.status(403).json({
+                status: "fail",
+                message: "You do not have access to this operation.",
+            });
+        }
+
         await deletePatientService(req.params.patientId)
 
         res.status(200).json({

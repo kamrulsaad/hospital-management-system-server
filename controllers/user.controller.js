@@ -178,6 +178,14 @@ exports.getAllUsers = async (req, res) => {
 
 exports.getUserById = async (req, res) => {
   try {
+
+    if (!req?.admin) {
+      return res.status(403).json({
+        status: "fail",
+        message: "You do not have access to this data.",
+      });
+    }
+
     const { userId } = req.params
 
     const user = await getUserByIdService(userId)

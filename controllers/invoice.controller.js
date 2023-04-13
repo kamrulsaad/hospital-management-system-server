@@ -61,6 +61,13 @@ exports.findInvById = async (req, res) => {
 exports.deleteInvoice = async (req, res) => {
     try {
 
+        if (!req?.admin) {
+            return res.status(403).json({
+              status: "fail",
+              message: "You do not have access to this operation.",
+            });
+          }
+
         await deleteInvoiceService(req.params.invId)
 
         res.status(200).json({

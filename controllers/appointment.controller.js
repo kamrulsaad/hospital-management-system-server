@@ -112,6 +112,13 @@ exports.updateApptInfo = async (req, res) => {
 exports.deleteAppointment = async (req, res) => {
     try {
 
+        if (!req?.admin) {
+            return res.status(403).json({
+                status: "fail",
+                message: "You do not have access to this operation.",
+            });
+        }
+
         await deleteApptIdService(req.params.apptId)
 
         res.status(200).json({
