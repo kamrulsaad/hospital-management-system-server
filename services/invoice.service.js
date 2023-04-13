@@ -1,13 +1,18 @@
 const Invoice = require("../models/Invoice")
+const Patient = require("../models/Patient")
 const { findUserByEmailService } = require("./user.service")
 
 exports.createInvoiceService = async (info, user, patient) => {
 
-    const {_id} = await findUserByEmailService(user.email)
+    const {_id: createdBy} = await findUserByEmailService(user.email)
 
-    info = {...info, createdBy: _id, patient}
+    info = {...info, createdBy, patient}
 
-    return await Invoice.create(info)
+    const invoice =  await Invoice.create(info)
+
+    await Patient.updateOne({_id: patient}, {$push: {invoices: invoice._id}})
+
+    return invoice
 } 
 
 exports.getAllInvoiceService =  async (pagination) => {

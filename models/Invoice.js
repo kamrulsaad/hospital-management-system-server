@@ -5,23 +5,39 @@ const invoiceSchema = mongoose.Schema({
     patient: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Patient",
-        required: true
+        required: [true, "Please provide patient Id"]
     },
 
     payments: [{
-        name: {
-            type: String,
-            required: [true, "Please provide payment option name"]
-        },
-        amount: {
-            type: Number,
-            required: [true, 'Please provide payment amount!'],
-            min: [1, "Payment value cannot be less than or equal to zero"]
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+        requires: [true, 'Please provide category of payments']
     }],
 
-    total: {
-        type: Number
+    sub_total: {
+        type: Number,
+        required: [true, "Please Provide total value"],
+        min: [0, "Sub-total amount cannot be negative"]
+    },
+
+    discount: {
+        type: Number,
+        default: 0,
+        min: [0, "Discount percentage cannot be negative"],
+        max: [100, 'Discount percentage cannot be more than 100']
+    },
+    
+    tax: {
+        type: Number,
+        default: 0,
+        min: [0, "Tax percentage cannot be negative"],
+        max: [100, 'Tax percentage cannot be more than 100']
+    },
+
+    grand_total: {
+        type: Number,
+        required: [true, "Please provide grand-total value"],
+        min: [0, "Grand-total amount cannot be negative"]
     },
 
     serialId: {
@@ -40,16 +56,6 @@ const invoiceSchema = mongoose.Schema({
 })
 
 invoiceSchema.pre("save", function (next) {
-
-    let payments = this.payments
-
-    let total = 0;
-
-    for(const p of payments){
-        total+= p.amount
-    }
-
-    this.total = total
 
     let doc = this
 

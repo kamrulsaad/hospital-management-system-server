@@ -9,15 +9,11 @@ exports.addAppoinmentService = async (apptinfo, user) => {
 
     const issuedBy = await findUserByEmailService(email)
 
-    const { patient: _id } = apptinfo
-
-    const patient = await findPatientbyIdService(_id)
-
-    apptinfo = { ...apptinfo, patient, issuedBy }
+    apptinfo = { ...apptinfo, issuedBy }
 
     const appointment = await Appointment.create(apptinfo)
 
-    await Patient.updateOne({ _id }, { $push: { appointments: appointment._id } })
+    await Patient.updateOne({ _id: apptinfo.patient }, { $push: { appointments: appointment._id } })
 
     return appointment
 }

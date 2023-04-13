@@ -62,6 +62,11 @@ const patientSchema = mongoose.Schema(
             unique: true
         },
 
+        invoices: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Invoice',
+        }],
+
         appointments: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Appointment',
