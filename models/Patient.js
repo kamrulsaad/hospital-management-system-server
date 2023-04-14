@@ -21,12 +21,13 @@ const patientSchema = mongoose.Schema(
 
         age: {
             type: Number,
-            required: [true, "Please provide patient's age information"]
+            required: [true, "Please provide patient's age."]
         },
 
         gender: {
             type: String,
             enum: ["Female", "Male", "Others"],
+            required: [true, "Please provide patient's gender."]
         }, 
 
         bloodGroup:{
