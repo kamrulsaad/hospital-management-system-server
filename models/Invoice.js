@@ -45,6 +45,11 @@ const invoiceSchema = mongoose.Schema({
         unique: true
     },
 
+    paymentCompleted: {
+        type: Boolean,
+        default: false
+    },
+
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Appointment",

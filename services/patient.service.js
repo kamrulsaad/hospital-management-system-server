@@ -6,7 +6,13 @@ exports.addNewPatientService = async (patientInfo) => {
 };
 
 exports.findPatientbyIdService = async (_id) => {
-    return await Patient.findById(_id)
+    return await Patient.findById(_id).populate([{
+        path: "appointments",
+        select: "reason paymentCompleted createdAt serialId",
+    }, {
+        path: "invoices",
+        select: "sub_total grand_total createdAt serialId",
+    }])
 }
 
 exports.getAllPatientsService = async (pagination) => {
