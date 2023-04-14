@@ -3,7 +3,8 @@ const mongoose = require('mongoose')
 const categorySchema = mongoose.Schema({
     name: {
         type: String,
-        required: [true, "Please mention the type of payment"]
+        required: [true, "Please mention the type of payment"],
+        unique: [true, "Categories must be unique"]
     },
     amount: {
         type: Number,
