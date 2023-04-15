@@ -24,7 +24,7 @@ exports.getAllInvoiceService =  async (pagination) => {
     const invoices =  await Invoice.find({}).populate({
         path: 'patient',
         select: "serialId phone name"
-    }).select("serialId payments sub_total grand_total").sort({"serialId" : -1}).skip(startIndex).limit(limit);
+    }).select("serialId payments sub_total createdAt grand_total").sort({"serialId" : -1}).skip(startIndex).limit(limit);
 
     return {
         invoices, total
