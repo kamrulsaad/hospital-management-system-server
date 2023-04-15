@@ -52,7 +52,7 @@ const invoiceSchema = mongoose.Schema({
 
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Appointment",
+        ref: "User",
         required: true
     }
 
