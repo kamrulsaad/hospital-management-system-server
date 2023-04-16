@@ -24,7 +24,7 @@ exports.getAllInvoiceService =  async (pagination) => {
     const invoices =  await Invoice.find({}).populate({
         path: 'patient',
         select: "serialId phone name"
-    }).select("serialId payments sub_total createdAt status grand_total").sort({"serialId" : -1}).skip(startIndex).limit(limit);
+    }).select("serialId payments sub_total createdAt paymentCompleted grand_total").sort({"serialId" : -1}).skip(startIndex).limit(limit);
 
     return {
         invoices, total
@@ -45,7 +45,7 @@ exports.invByIdService = async (id) => {
             path: "createdBy",
             select: "phone email role firstName lastName"
         }
-    ]).select("grand_total sub_total status createdAt tax discount serialId")
+    ]).select("grand_total sub_total paymentCompleted createdAt tax discount serialId")
 }
 
 exports.deleteInvoiceService = async (_id) => {
