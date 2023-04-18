@@ -1,4 +1,4 @@
-const { createInvoiceService, getAllInvoiceService, invByIdService, deleteInvoiceService } = require("../services/invoice.service")
+const { createInvoiceService, getAllInvoiceService, invByIdService, deleteInvoiceService, statusUpdateService } = require("../services/invoice.service")
 
 exports.createInvoice = async (req, res) => {
     try {
@@ -25,7 +25,7 @@ exports.getAllInvoice = async (req, res) => {
 
         const { page, limit, startIndex, endIndex } = req.pagination;
 
-        const {invoices , total}= await getAllInvoiceService(req.pagination)
+        const { invoices, total } = await getAllInvoiceService(req.pagination)
 
         res.status(200).json({
             status: "success",
@@ -63,10 +63,10 @@ exports.deleteInvoice = async (req, res) => {
 
         if (!req?.admin) {
             return res.status(403).json({
-              status: "fail",
-              message: "You do not have access to this operation.",
+                status: "fail",
+                message: "You do not have access to this operation.",
             });
-          }
+        }
 
         await deleteInvoiceService(req.params.invId)
 
@@ -77,7 +77,46 @@ exports.deleteInvoice = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             status: 'fail',
-            message: error.message
+            error: error.message
+        })
+    }
+}
+
+exports.getInvoiceQR = async (req, res) => {
+    try {
+        const invoice = await invByIdService(req.params.invId)
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Invoice for patient',
+            data: invoice
+        })
+    } catch (error) {
+        res.status(500).json({
+            status: 'fail',
+            error: error.message
+        })
+    }
+}
+
+exports.updateInvoiceStatus = async (req, res) => {
+    try {
+
+        const data = await statusUpdateService(req.params.invId)
+
+        if(!data.modifiedCount) return res.status(500).json({
+            status: 'fail',
+            error: 'Something went wrong'
+        })
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Payment status updated successfully'
+        })
+    } catch (error) {
+        res.status(500).json({
+            status: 'fail',
+            error: error.message
         })
     }
 }

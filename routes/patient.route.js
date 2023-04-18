@@ -9,6 +9,8 @@ router.post("/add-new-patient", verifyToken, patientController.addNewPatient);
 
 router.get("/all-patient", verifyToken, paginate, patientController.getAllPatients)
 
+router.get('/qr/:patientId', patientController.getPatientQR)
+
 router.route("/:patientId")
 .get(verifyToken, patientController.getPatientById)
 .delete(verifyAdmin, patientController.deletePatient)

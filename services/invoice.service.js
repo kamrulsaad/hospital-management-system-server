@@ -51,3 +51,7 @@ exports.invByIdService = async (id) => {
 exports.deleteInvoiceService = async (_id) => {
     await Invoice.deleteOne({_id})
 }
+
+exports.statusUpdateService = async (id) => {
+    return await Invoice.updateOne({_id: id}, {paymentCompleted: true})
+}
