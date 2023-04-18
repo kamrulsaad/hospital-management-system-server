@@ -14,20 +14,20 @@ exports.updateImageUrlService = async (req) => {
 
   const user = await User.findOne({ email: req.user.email });
 
-  
+
   if (user.imageURL) {
-    
+
     const previousImagePath = path.join(__dirname, '..', user.imageURL.replace(`${req.protocol}://${req.get('host')}/`, ''));
     fs.unlink(previousImagePath, (err) => {
       if (err) {
         return err;
-      } 
-    });    
+      }
+    });
   }
 
   const url = `${req.protocol}://${req.get('host')}/${req.file.path}`
 
-  await User.updateOne({_id: user._id}, {$set: {imageURL: url}})
+  await User.updateOne({ _id: user._id }, { $set: { imageURL: url } })
 
   return user.imageURL
 }
@@ -53,11 +53,18 @@ exports.updatePassService = async (password, _id) => {
 
 exports.findAllUserService = async (pagination) => {
 
-  const { limit, startIndex } = pagination;
+  let { startIndex, limit, key, value } = pagination
 
-  const total = await User.countDocuments()
+  const query = key ? {
+    [key]: {
+      $regex: value,
+      $options: 'i'
+    }
+  } : {};
 
-  const users = await User.find({}).select("firstName lastName role email").skip(startIndex).limit(limit);
+  const total = await User.find(query).countDocuments()
+
+  const users = await User.find(query).select("firstName lastName role email phone status serialId").skip(startIndex).limit(limit);
 
   return { users, total }
 }

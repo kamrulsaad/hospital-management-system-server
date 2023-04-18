@@ -62,7 +62,7 @@ appointmentSchema.pre("save", function (next) {
 
     if (this.isNew) {
 
-        let currentDate = moment().format('YYYYMMDD');
+        let currentDate = moment().format('YYMMDD');
 
         mongoose.model('Appointment').findOne({
             serialId: { $regex: ('^' + currentDate) }

@@ -17,15 +17,22 @@ exports.findPatientbyIdService = async (_id) => {
 
 exports.getAllPatientsService = async (pagination) => {
 
-    const {startIndex, limit} = pagination
+    const { startIndex, limit, key, value } = pagination
 
-    const total = await Patient.countDocuments()
+    const query = key ? {
+        [key]: {
+            $regex: value,
+            $options: 'i'
+        }
+    } : {};
 
-    const patients = await Patient.find({}).select('name phone serialId age').sort({"serialId" : -1}).skip(startIndex).limit(limit);
+    const total = await Patient.find(query).countDocuments()
 
-    return {total, patients}
+    const patients = await Patient.find(query).select('name phone serialId age bloodGroup gender').sort({ "serialId": -1 }).skip(startIndex).limit(limit);
+
+    return { total, patients }
 }
 
 exports.deletePatientService = async (_id) => {
-    await Patient.deleteOne({_id})
+    await Patient.deleteOne({ _id })
 }

@@ -1,6 +1,5 @@
 const Appointment = require("../models/Appointment")
 const Patient = require("../models/Patient")
-const { findPatientbyIdService } = require("./patient.service")
 const { findUserByEmailService } = require("./user.service")
 
 exports.addAppoinmentService = async (apptinfo, user) => {
@@ -20,14 +19,21 @@ exports.addAppoinmentService = async (apptinfo, user) => {
 
 exports.allApptService = async (pagination) => {
 
-    const { startIndex, limit } = pagination
+    const { startIndex, limit, key, value } = pagination
 
-    const total = await Appointment.countDocuments()
+    const query = key ? {
+        [key]: {
+            $regex: value,
+            $options: 'i'
+        }
+    } : {};
 
-    const appointments = await Appointment.find({}).populate({
+    const total = await Appointment.find(query).countDocuments()
+
+    const appointments = await Appointment.find(query).populate({
         path: "patient",
         select: "name phone serialId -_id"
-    }).select("reason serialId _id paymentCompleted").sort({"serialId" : -1}).skip(startIndex).limit(limit);
+    }).select("reason paymentCompleted serialId createdAt").sort({"serialId" : -1}).skip(startIndex).limit(limit);
 
     return { appointments, total }
 }

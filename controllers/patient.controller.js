@@ -40,7 +40,7 @@ exports.getAllPatients = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             status: 'fail',
-            message: "Internal server error"
+            error: error.message
         })
     }
 }

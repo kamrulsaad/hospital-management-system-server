@@ -4,27 +4,36 @@ const { findUserByEmailService } = require("./user.service")
 
 exports.createInvoiceService = async (info, user, patient) => {
 
-    const {_id: createdBy} = await findUserByEmailService(user.email)
+    const { _id: createdBy } = await findUserByEmailService(user.email)
 
-    info = {...info, createdBy, patient}
+    info = { ...info, createdBy, patient }
 
-    const invoice =  await Invoice.create(info)
+    const invoice = await Invoice.create(info)
 
-    await Patient.updateOne({_id: patient}, {$push: {invoices: invoice._id}})
+    await Patient.updateOne({ _id: patient }, { $push: { invoices: invoice._id } })
 
     return invoice
-} 
+}
 
-exports.getAllInvoiceService =  async (pagination) => {
+exports.getAllInvoiceService = async (pagination) => {
 
-    const { startIndex, limit } = pagination
+    let { startIndex, limit, key, value } = pagination
 
-    const total = await Invoice.countDocuments()
+    const query = key ? {
+        [key]: (value === 'true' || value === 'false')
+            ? value
+            : {
+                $regex: value,
+                $options: 'i'
+            }
+    } : {};
 
-    const invoices =  await Invoice.find({}).populate({
+    const total = await Invoice.find(query).countDocuments()
+
+    const invoices = await Invoice.find(query).populate({
         path: 'patient',
         select: "serialId phone name"
-    }).select("serialId payments sub_total createdAt paymentCompleted grand_total").sort({"serialId" : -1}).skip(startIndex).limit(limit);
+    }).select("serialId sub_total createdAt paymentCompleted grand_total").sort({ "serialId": -1 }).skip(startIndex).limit(limit);
 
     return {
         invoices, total
@@ -49,9 +58,9 @@ exports.invByIdService = async (id) => {
 }
 
 exports.deleteInvoiceService = async (_id) => {
-    await Invoice.deleteOne({_id})
+    await Invoice.deleteOne({ _id })
 }
 
 exports.statusUpdateService = async (id) => {
-    return await Invoice.updateOne({_id: id}, {paymentCompleted: true})
+    return await Invoice.updateOne({ _id: id }, { paymentCompleted: true })
 }

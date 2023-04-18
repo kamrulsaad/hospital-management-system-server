@@ -102,7 +102,7 @@ userSchema.pre("save", function (next) {
 
     if (this.isNew) {
 
-        let currentDate = moment().format('YYYYMMDD');
+        let currentDate = moment().format('YYMMDD');
 
         mongoose.model('User').findOne({
             serialId: { $regex: ('^' + currentDate) }
