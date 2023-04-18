@@ -6,7 +6,8 @@ const {
   getAllDoctorsService,
   getUserByIdService,
   updatePassService,
-  updateImageUrlService } = require("../services/user.service");
+  updateImageUrlService,
+  deleteUserByIdService } = require("../services/user.service");
 const { generateToken } = require("../utils/token");
 
 exports.login = async (req, res) => {
@@ -239,17 +240,46 @@ exports.getAllDoctors = async (req, res) => {
     res.status(200).json({
       status: "success",
       data: doctors,
-      total,
-      page,
-      limit,
-      startIndex,
-      endIndex,
+      total, page, limit, startIndex, endIndex,
     })
 
   } catch (error) {
     res.status(500).json({
       status: "fail",
       message: "Internal server error",
+    });
+  }
+}
+
+exports.deleteUserById = async (req, res) => {
+  try {
+
+    if (!req?.admin) {
+      return res.status(403).json({
+        status: "fail",
+        message: "You cannot delete this user",
+      });
+    }
+
+    const { userId } = req.params
+
+    const data = await deleteUserByIdService(userId)
+
+    if (!data.deletedCount) {
+      return res.status(404).json({
+        status: "fail",
+        message: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      message: "User deleted successfully"
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "fail",
+      error: error.message,
     });
   }
 }

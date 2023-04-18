@@ -72,3 +72,7 @@ exports.findAllUserService = async (pagination) => {
 exports.getUserByIdService = async (_id) => {
   return await User.findById(_id, { password: 0 }).populate('addedBy', 'firstName lastName role email')
 }
+
+exports.deleteUserByIdService = async (_id) => {
+  return await User.deleteOne({ _id })
+}

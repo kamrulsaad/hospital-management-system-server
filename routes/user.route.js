@@ -20,6 +20,8 @@ router.get("/all-doctors", verifyToken, paginate, userController.getAllDoctors)
 
 router.get("/all-user", verifyAdmin, paginate, userController.getAllUsers);
 
-router.get("/:userId", verifyAdmin, userController.getUserById);
+router.route("/:userId")
+    .get(verifyAdmin, userController.getUserById)
+    .delete(verifyAdmin, userController.deleteUserById)
 
 module.exports = router;
