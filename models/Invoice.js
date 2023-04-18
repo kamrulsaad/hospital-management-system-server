@@ -33,7 +33,6 @@ const invoiceSchema = mongoose.Schema({
         min: [0, "Tax percentage cannot be negative"],
         max: [100, 'Tax percentage cannot be more than 100']
     },
-
     grand_total: {
         type: Number,
         required: [true, "Please provide grand-total value"],
@@ -41,7 +40,7 @@ const invoiceSchema = mongoose.Schema({
         validate: {
             validator: function () {
                 const temp_total = this.sub_total + this.sub_total * (this.tax / 100);
-                const grand_total = Math.round(temp_total - temp_total * (this.discount / 100)) 
+                const grand_total = Math.round(temp_total - temp_total * (this.discount / 100))
                 return grand_total === this.grand_total;
             },
             message:

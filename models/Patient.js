@@ -68,6 +68,11 @@ const patientSchema = mongoose.Schema(
             ref: 'Invoice',
         }],
 
+        tests: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Test',
+        }],
+
         appointments: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Appointment',

@@ -37,12 +37,17 @@ const appointmentSchema = mongoose.Schema({
     appointed_to: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: true
+        required: [true, "Please provide the doctor's id"]
     },
 
     serialId: {
         type: String,
         unique: true
+    },
+
+    amount: {
+        type: Number,
+        required: [true, "Please provide the amount to pay"],
     },
 
     paymentCompleted: {

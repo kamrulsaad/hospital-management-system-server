@@ -40,7 +40,7 @@ const userSchema = mongoose.Schema(
 
         role: {
             type: String,
-            enum: ["doctor", "admin", "super-admin", "receptionist", "accountant"],
+            enum: ["doctor", "admin", "super-admin", "receptionist", "accountant", 'labaratorist'],
             required: [true, "Please provide a role for your organization."]
         },
 
@@ -48,7 +48,7 @@ const userSchema = mongoose.Schema(
             type: String,
             required: [true, "Please provide a first name"],
             trim: true,
-            minLength: [3, "Name must be at least 3 characters."],
+            minLength: [2, "Name must be at least 2 characters."],
             maxLength: [100, "Name is too large"],
         },
         lastName: {
