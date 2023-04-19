@@ -28,9 +28,9 @@ const patientSchema = mongoose.Schema(
             type: String,
             enum: ["Female", "Male", "Others"],
             required: [true, "Please provide patient's gender."]
-        }, 
+        },
 
-        bloodGroup:{
+        bloodGroup: {
             type: String,
             enum: ['A+', "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"]
         },
@@ -69,8 +69,23 @@ const patientSchema = mongoose.Schema(
         }],
 
         tests: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Test',
+            category: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Category',
+            },
+            file_url: String,
+            available: {
+                type: Boolean,
+                default: false
+            },
+            createdAt: {
+                type: Date,
+                default: Date.now,
+            },
+            updatedAt: {
+                type: Date,
+                default: Date.now,
+            },
         }],
 
         appointments: [{

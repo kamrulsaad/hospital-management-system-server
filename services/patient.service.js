@@ -12,6 +12,8 @@ exports.findPatientbyIdService = async (_id) => {
     }, {
         path: "invoices",
         select: "sub_total grand_total createdAt serialId",
+    }, {
+        path: 'tests.category'
     }])
 }
 
