@@ -11,9 +11,16 @@ exports.findPatientbyIdService = async (_id) => {
         select: "reason paymentCompleted createdAt serialId",
     }, {
         path: "invoices",
-        select: "sub_total grand_total createdAt serialId",
-    }, {
-        path: 'tests.category'
+        select: "sub_total grand_total createdAt serialId paymentCompleted",
+    },
+    {
+        path: "tests",
+        select: "createdAt serialId available",
+        populate: {
+            path: "category",
+            select: "name -_id"
+        },
+        options: { sort: { serialId: -1 } }
     }])
 }
 

@@ -69,23 +69,8 @@ const patientSchema = mongoose.Schema(
         }],
 
         tests: [{
-            category: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Category',
-            },
-            file_url: String,
-            available: {
-                type: Boolean,
-                default: false
-            },
-            createdAt: {
-                type: Date,
-                default: Date.now,
-            },
-            updatedAt: {
-                type: Date,
-                default: Date.now,
-            },
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Test',
         }],
 
         appointments: [{

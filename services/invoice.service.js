@@ -1,7 +1,7 @@
 const Invoice = require("../models/Invoice")
 const Patient = require("../models/Patient")
+const Test = require("../models/Test")
 const { findUserByEmailService } = require("./user.service")
-const mongoose = require('mongoose')
 
 exports.createInvoiceService = async (info, user, patient) => {
 
@@ -12,11 +12,21 @@ exports.createInvoiceService = async (info, user, patient) => {
     const invoice = await Invoice.create(info)
 
     const categoryIds = invoice.payments.map((payment) => ({ category: payment }));
+
+    const tests = await Promise.all(categoryIds.map(async (categoryId) => {
+        const test = new Test({
+            category: categoryId.category,
+            patient,
+            createdBy
+        });
+        await test.save();
+        return test._id;
+    }));
+
     await Patient.updateOne(
         { _id: patient },
-        { $push: { tests: { $each: categoryIds }, invoices: invoice._id } }
+        { $push: { tests: { $each: tests }, invoices: invoice._id } }
     );
-
 
     return invoice
 }
