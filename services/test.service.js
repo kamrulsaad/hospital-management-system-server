@@ -26,3 +26,27 @@ exports.updateFileUrlService = async (req) => {
 
     return url
 }
+
+exports.findAllTestsService = async (pagination) => {
+
+    const { startIndex, limit, key, value } = pagination
+
+    const query = key ? {
+        [key]: value
+    } : {};
+
+    const total = await Test.find(query).countDocuments()
+
+    const tests = await Test.find(query).select("createdAt serialId available").populate([
+        {
+            path: "category",
+            select: "name -_id"
+        },
+        {
+            path: "patient",
+            select: "name -_id"
+        }
+    ]).sort({serialId: -1}).skip(startIndex).limit(limit)
+
+    return { tests, total}
+}

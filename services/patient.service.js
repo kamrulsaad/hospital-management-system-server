@@ -15,7 +15,7 @@ exports.findPatientbyIdService = async (_id) => {
     },
     {
         path: "tests",
-        select: "createdAt serialId available",
+        select: "createdAt serialId available file_url",
         populate: {
             path: "category",
             select: "name -_id"

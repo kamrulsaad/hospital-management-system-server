@@ -6,6 +6,7 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 app.use('/images', express.static('images'));
+app.use('/pdfs', express.static('pdfs'));
 
 // routes
 const userRoute = require("./routes/user.route");
