@@ -23,7 +23,8 @@ const testSchema = mongoose.Schema(
         available: {
             type: Boolean,
             default: false
-        }
+        },
+        description: String
     },
     {
         timestamps: true,

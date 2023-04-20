@@ -1,4 +1,4 @@
-const { updateFileUrlService, findAllTestsService } = require("../services/test.service");
+const { updateFileUrlService, findAllTestsService, findTestByIdService } = require("../services/test.service");
 
 exports.uploadTestFile = async (req, res) => {
     try {
@@ -30,6 +30,24 @@ exports.allTests = async (req, res) => {
             message: "All Tests",
             total, page, limit, startIndex, endIndex,
             data: tests
+        })
+    } catch (error) {
+        res.status(500).json({
+            status: "fail",
+            error: error.message
+        })
+    }
+}
+
+exports.getTest = async (req, res) => {
+    try {
+
+        const test = await findTestByIdService(req.params.testId);
+
+        res.status(200).json({
+            status: "success",
+            message: "Test",
+            data: test
         })
     } catch (error) {
         res.status(500).json({

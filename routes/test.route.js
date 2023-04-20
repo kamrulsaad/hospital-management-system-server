@@ -9,4 +9,7 @@ router.post("/upload/:testId", verifyToken, pdfUploader.single('pdf'), testContr
 
 router.get("/all", verifyToken, paginate, testController.allTests);
 
+router.route("/:testId")
+.get(testController.getTest);
+
 module.exports = router;

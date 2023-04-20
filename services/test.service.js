@@ -3,7 +3,20 @@ const fs = require('fs');
 const path = require('path');
 
 exports.findTestByIdService = async (testId) => {
-    return await Test.findById(testId);
+    return await Test.findById(testId).populate([
+        {
+            path: "category",
+            select: "name -_id"
+        },
+        {
+            path: "patient",
+            select: "name -_id serialId"
+        },
+        {
+            path: "createdBy",
+            select: "firstName lastName phone -_id"
+        }
+    ]).select("-__v");
 }
 
 exports.updateFileUrlService = async (req) => {
@@ -22,7 +35,7 @@ exports.updateFileUrlService = async (req) => {
 
     const url = `${req.protocol}://${req.get('host')}/${req.file.path}`
 
-    await Test.updateOne({ _id: test._id }, { $set: { file_url: url, available: true } })
+    await Test.updateOne({ _id: test._id }, { $set: { file_url: url, available: true, description: req.body.description } })
 
     return url
 }
@@ -46,7 +59,7 @@ exports.findAllTestsService = async (pagination) => {
             path: "patient",
             select: "name -_id"
         }
-    ]).sort({serialId: -1}).skip(startIndex).limit(limit)
+    ]).sort({ serialId: -1 }).skip(startIndex).limit(limit)
 
-    return { tests, total}
+    return { tests, total }
 }
