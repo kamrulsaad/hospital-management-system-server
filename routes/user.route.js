@@ -12,7 +12,7 @@ router.post("/signup", verifyAdmin, userController.staffSignUp);
 
 router.post("/update-password", verifyToken, userController.updatePass);
 
-router.post("/upload-picture", verifyToken, uploader.single("image"), userController.updateProfilePicture);
+router.post("/upload-picture", verifyToken, uploader.imageUploader.single("image"), userController.updateProfilePicture);
 
 router.get("/user-info", verifyToken, userController.getMe);
 
