@@ -34,14 +34,24 @@ exports.updateImageUrlService = async (req) => {
 
 exports.getAllDoctorsService = async (pagination) => {
 
-  const { limit, startIndex } = pagination;
+  let { startIndex, limit, key, value } = pagination;
 
-  const total = await User.find({ role: "doctor" }).countDocuments()
+  const query = { role: "doctor" };
 
-  const doctors = await User.find({ role: "doctor" }).select("firstName lastName email").skip(startIndex).limit(limit);;
+  if (key && value) {
+    query[key] = {
+      $regex: value,
+      $options: 'i'
+    };
+  }
 
-  return { total, doctors }
+  const total = await User.countDocuments(query);
+
+  const doctors = await User.find(query).select("firstName lastName email phone status serialId").skip(startIndex).limit(limit);
+
+  return { total, doctors };
 };
+
 
 exports.getUserInfoService = async (email) => {
   return await User.findOne({ email })

@@ -1,6 +1,5 @@
 const Patient = require("../models/Patient");
 
-
 exports.addNewPatientService = async (patientInfo) => {
     return await Patient.create(patientInfo)
 };
@@ -37,7 +36,7 @@ exports.getAllPatientsService = async (pagination) => {
 
     const total = await Patient.find(query).countDocuments()
 
-    const patients = await Patient.find(query).select('name phone serialId age bloodGroup gender').sort({ "serialId": -1 }).skip(startIndex).limit(limit);
+    const patients = await Patient.find(query).select('name phone serialId age bloodGroup gender createdAt').sort({ "serialId": -1 }).skip(startIndex).limit(limit);
 
     return { total, patients }
 }

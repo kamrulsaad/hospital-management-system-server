@@ -32,22 +32,31 @@ exports.allApptService = async (pagination) => {
 
     const appointments = await Appointment.find(query).populate({
         path: "patient",
-        select: "name phone serialId -_id"
-    }).select("reason paymentCompleted serialId createdAt").sort({"serialId" : -1}).skip(startIndex).limit(limit);
+        select: "name phone -_id"
+    }).select("reason paymentCompleted serialId createdAt").sort({ "serialId": -1 }).skip(startIndex).limit(limit);
 
     return { appointments, total }
 }
 
 exports.myApptService = async (pagination, appointed_to) => {
 
-    const { startIndex, limit } = pagination
+    let { startIndex, limit, key, value } = pagination;
 
-    const total = await Appointment.find({ appointed_to }).countDocuments()
+    const query = { appointed_to };
 
-    const appointments = await Appointment.find({ appointed_to }).populate({
+    if (key && value) {
+        query[key] = {
+            $regex: value,
+            $options: 'i'
+        };
+    }
+
+    const total = await Appointment.find(query).countDocuments()
+
+    const appointments = await Appointment.find(query).populate({
         path: "patient",
         select: "name phone -_id"
-    }).select("reason serialId").skip(startIndex).limit(limit);
+    }).select("reason paymentCompleted serialId createdAt").skip(startIndex).limit(limit);
 
     return { appointments, total }
 }
@@ -64,5 +73,5 @@ exports.updateApptService = async (_id, info) => {
 }
 
 exports.deleteApptIdService = async (_id) => {
-    return await Appointment.deleteOne({_id})
+    return await Appointment.deleteOne({ _id })
 }
