@@ -1,4 +1,4 @@
-const { updateFileUrlService, findAllTestsService, findTestByIdService } = require("../services/test.service");
+const { updateFileUrlService, findAllTestsService, findTestByIdService, findByIdAndDeleteService, removeFileService } = require("../services/test.service");
 
 exports.uploadTestFile = async (req, res) => {
     try {
@@ -23,7 +23,7 @@ exports.allTests = async (req, res) => {
 
         const { page, limit, startIndex, endIndex } = req.pagination;
 
-        const {tests, total} = await findAllTestsService(req.pagination);
+        const { tests, total } = await findAllTestsService(req.pagination);
 
         res.status(200).json({
             status: "success",
@@ -48,6 +48,54 @@ exports.getTest = async (req, res) => {
             status: "success",
             message: "Test",
             data: test
+        })
+    } catch (error) {
+        res.status(500).json({
+            status: "fail",
+            error: error.message
+        })
+    }
+}
+
+exports.deleteTest = async (req, res) => {
+    try {
+
+        if (!req.admin) {
+            return res.status(403).json({
+                status: "fail",
+                error: "You are not authorized to perform this action"
+            })
+        }
+
+        const test = await findByIdAndDeleteService(req);
+
+        res.status(200).json({
+            status: "success",
+            message: `Test ${test?.serialId} Deleted Successfully`
+        })
+    } catch (error) {
+        res.status(500).json({
+            status: "fail",
+            error: error.message
+        })
+    }
+}
+
+exports.removeFile = async (req, res) => {
+    try {
+
+        const test = await removeFileService(req);
+
+        if(!test?.modifiedCount) {
+            return res.status(500).json({
+                status: "fail",
+                error: "Something went wrong"
+            })
+        }
+
+        res.status(200).json({
+            status: "success",
+            message: "File Removed Successfully"
         })
     } catch (error) {
         res.status(500).json({

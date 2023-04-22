@@ -1,4 +1,5 @@
 const Test = require("../models/Test");
+const Patient = require("../models/Patient");
 const fs = require('fs');
 const path = require('path');
 
@@ -62,4 +63,33 @@ exports.findAllTestsService = async (pagination) => {
     ]).sort({ serialId: -1 }).skip(startIndex).limit(limit)
 
     return { tests, total }
+}
+
+exports.findByIdAndDeleteService = async (req) => {
+    const test = await Test.findByIdAndDelete(req.params.testId);
+    if (test.file_url) {
+        const previousFilePath = path.join(__dirname, '..', test.file_url.replace(`${req.protocol}://${req.get('host')}/`, ''));
+        fs.unlink(previousFilePath, (err) => {
+            if (err) {
+                return err;
+            }
+        });
+    }
+    await Patient.updateOne({ _id: test.patient }, { $pull: { tests: req.params.testId } })
+    return test;
+}
+
+exports.removeFileService = async (req) => {
+    const test = await Test.findById(req.params.testId);
+
+    if (test.file_url) {
+        const previousFilePath = path.join(__dirname, '..', test.file_url.replace(`${req.protocol}://${req.get('host')}/`, ''));
+        fs.unlink(previousFilePath, (err) => {
+            if (err) {
+                return err;
+            }
+        });
+    }
+
+    return await Test.updateOne({ _id: test._id }, { $set: { file_url: '', available: false, description: '' } })
 }

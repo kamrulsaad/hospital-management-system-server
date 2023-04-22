@@ -74,7 +74,8 @@ exports.invByIdService = async (id) => {
 }
 
 exports.deleteInvoiceService = async (_id) => {
-    await Invoice.deleteOne({ _id })
+    const invoice = await Invoice.findByIdAndDelete( _id )
+    await Patient.updateOne({ _id: invoice.patient }, { $pull: { invoices: _id }})
 }
 
 exports.statusUpdateService = async (id) => {
