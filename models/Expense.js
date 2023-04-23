@@ -17,7 +17,10 @@ const expenseSchema = new mongoose.Schema({
         min: [0, 'Amount cannot be negative'],
     },
     description: String,
-});
+},
+    {
+        timestamps: true,
+    });
 
 expenseSchema.plugin(AutoIncrement, { id: 'serialId_sequence', inc_field: 'serialId' });
 
