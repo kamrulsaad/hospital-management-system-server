@@ -158,7 +158,7 @@ exports.getAllUsers = async (req, res) => {
 
     const { users, total } = await findAllUserService(req.pagination);
 
-    const { page, limit, startIndex, endIndex } = req.pagination;
+    const { page } = req.pagination;
 
     res.status(200).json({
       status: "success",
@@ -235,12 +235,12 @@ exports.getAllDoctors = async (req, res) => {
 
     const { doctors, total } = await getAllDoctorsService(req.pagination)
 
-    const { page, limit, startIndex, endIndex } = req.pagination;
+    const { page } = req.pagination;
 
     res.status(200).json({
       status: "success",
       data: doctors,
-      total, page, limit, startIndex, endIndex,
+      total, page,
     })
 
   } catch (error) {

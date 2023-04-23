@@ -25,7 +25,7 @@ exports.addNewPatient = async (req, res) => {
 exports.getAllPatients = async (req, res) => {
     try {
 
-        const { page, limit, startIndex, endIndex } = req.pagination;
+        const { page } = req.pagination;
 
         const { patients, total } = await getAllPatientsService(req.pagination)
 
@@ -34,7 +34,7 @@ exports.getAllPatients = async (req, res) => {
             status: 'success',
             message: "All Patient info",
             data: patients,
-            page, limit, startIndex, endIndex, total
+            page, total
         })
 
     } catch (error) {

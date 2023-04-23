@@ -31,7 +31,7 @@ exports.addAppointment = async (req, res) => {
 exports.allAppointments = async (req, res) => {
     try {
 
-        const { page, limit, startIndex, endIndex } = req.pagination;
+        const { page } = req.pagination;
 
         const { appointments, total } = await allApptService(req.pagination)
 
@@ -39,7 +39,7 @@ exports.allAppointments = async (req, res) => {
             status: "success",
             message: 'All appointments',
             data: appointments,
-            page, limit, startIndex, endIndex, total
+            page, total
         })
 
     } catch (error) {
@@ -70,7 +70,7 @@ exports.findApptById = async (req, res) => {
 exports.myAppointments = async (req, res) => {
     try {
 
-        const { page, limit, startIndex, endIndex } = req.pagination;
+        const { page } = req.pagination;
 
         const { _id } = await findUserByEmailService(req.user.email)
 
@@ -80,7 +80,7 @@ exports.myAppointments = async (req, res) => {
             status: "success",
             message: 'My appointments',
             data: appointments.length > 0 ? appointments : "No data found",
-            page, limit, startIndex, endIndex, total
+            page, total
         })
 
     } catch (error) {

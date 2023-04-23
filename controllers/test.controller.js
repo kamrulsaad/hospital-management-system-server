@@ -21,14 +21,14 @@ exports.uploadTestFile = async (req, res) => {
 exports.allTests = async (req, res) => {
     try {
 
-        const { page, limit, startIndex, endIndex } = req.pagination;
+        const { page } = req.pagination;
 
         const { tests, total } = await findAllTestsService(req.pagination);
 
         res.status(200).json({
             status: "success",
             message: "All Tests",
-            total, page, limit, startIndex, endIndex,
+            total, page,
             data: tests
         })
     } catch (error) {

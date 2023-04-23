@@ -23,7 +23,7 @@ exports.createInvoice = async (req, res) => {
 exports.getAllInvoice = async (req, res) => {
     try {
 
-        const { page, limit, startIndex, endIndex } = req.pagination;
+        const { page } = req.pagination;
 
         const { invoices, total } = await getAllInvoiceService(req.pagination)
 
@@ -31,7 +31,7 @@ exports.getAllInvoice = async (req, res) => {
             status: "success",
             message: 'All Invoices',
             data: invoices,
-            page, limit, startIndex, endIndex, total
+            page, total
         })
     } catch (error) {
         res.status(500).json({

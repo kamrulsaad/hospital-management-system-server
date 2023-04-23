@@ -5,13 +5,11 @@ module.exports = (req, res, next) => {
   const value = req.query.value || null;
 
   const startIndex = (page - 1) * limit;
-  const endIndex = page * limit;
 
   req.pagination = {
     page,
     limit,
     startIndex,
-    endIndex,
     key,
     value,
   };
