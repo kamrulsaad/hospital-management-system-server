@@ -43,16 +43,16 @@ exports.getAllExpensesService = async (pagination) => {
     let query = {};
 
     if (pagination.key && pagination.value) {
-        if (typeof pagination.value === 'string') {
-            if (pagination.key === 'category.name') {
-                query = { 'category.name': { $regex: pagination.value, $options: 'i' } };
-            } else {
-                query = { [pagination.key]: { $regex: pagination.value, $options: 'i' } };
-            }
+        if (typeof pagination.value === 'string' && pagination.key !== 'serialId') {
+            query = { [pagination.key]: { $regex: pagination.value, $options: 'i' } };
+        } else if (typeof pagination.value === 'string' && pagination.key === 'serialId') {
+            const serialIdValue = parseInt(pagination.value);
+            query = { [pagination.key]: { $eq: serialIdValue } };
         } else if (typeof pagination.value === 'number') {
             query = { [pagination.key]: { $eq: pagination.value } };
         }
     }
+
 
     const total = await Expense.countDocuments(query);
 

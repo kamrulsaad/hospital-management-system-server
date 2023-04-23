@@ -2,11 +2,10 @@ const express = require('express')
 const router = express.Router()
 const expController = require('../controllers/expense.controller')
 const paginate = require('../middlewares/paginate')
-const verifyAccountant = require('../middlewares/verifyAccountant')
 const verifyAdmin = require('../middlewares/verifyAdmin')
 const verifyToken = require('../middlewares/verifyToken')
 
-router.post("/create", verifyToken, verifyAccountant, expController.createExpense)
+router.post("/create", verifyToken, expController.createExpense)
 
 router.get('/all', verifyToken, paginate, expController.getAllExpenses)
 
