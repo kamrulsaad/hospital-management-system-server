@@ -165,9 +165,6 @@ exports.getAllUsers = async (req, res) => {
       data: users,
       page,
       total,
-      limit,
-      startIndex,
-      endIndex
     });
   } catch (error) {
     res.status(500).json({
