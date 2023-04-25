@@ -47,7 +47,8 @@ exports.getAllDoctorsService = async (pagination) => {
 
   const total = await User.countDocuments(query);
 
-  const doctors = await User.find(query).select("firstName lastName email phone status serialId").skip(startIndex).limit(limit);
+  const doctors = await User.find(query).select("firstName lastName email phone status serialId")
+    .sort({ serialId: -1 }).skip(startIndex).limit(limit);
 
   return { total, doctors };
 };
@@ -74,7 +75,8 @@ exports.findAllUserService = async (pagination) => {
 
   const total = await User.find(query).countDocuments()
 
-  const users = await User.find(query).select("firstName lastName role email phone status serialId").skip(startIndex).limit(limit);
+  const users = await User.find(query).select("firstName lastName role email phone status serialId").sort({ serialId: -1 })
+    .skip(startIndex).limit(limit);
 
   return { users, total }
 }
