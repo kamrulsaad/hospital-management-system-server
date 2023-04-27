@@ -74,3 +74,15 @@ exports.updateBedService = async (id, data) => {
 exports.deleteBedService = async (id) => {
     return await Bed.findByIdAndDelete(id);
 }
+
+exports.assignBedService = async (id, data) => {
+    return await Bed.updateOne({ _id: id }, { $set: { patient: data.patient, status: false } })
+}
+
+exports.unassignBedService = async (id) => {
+    return await Bed.updateOne({ _id: id }, { $set: { patient: null, status: true } })
+}
+
+exports.getAllAvailableBedService = async () => {
+    return await Bed.find({ status: true }, { name: 1, })
+}

@@ -9,6 +9,12 @@ router.post('/create', verifyAdmin, bedController.createBed);
 
 router.get('/', verifyToken, paginate, bedController.getAllBed);
 
+router.get('/available', verifyToken, bedController.getAvailableBeds);
+
+router.patch('/assign/:id', verifyToken, bedController.assignBed)
+
+router.patch('/unassign/:id', verifyToken, bedController.unassignBed)
+
 router.route('/:id')
     .get(verifyAdmin, bedController.getBed)
     .patch(verifyAdmin, bedController.updateBed)

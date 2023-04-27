@@ -1,4 +1,4 @@
-const { createBedCategoryService, getBedCategoryService, getAllBedCategoriesService, updateBedCategoryService, deleteBedCategoryService, createBedService, getBedService, getAllBedsService, updateBedService, deleteBedService } = require("../services/bed.service")
+const { createBedCategoryService, getBedCategoryService, getAllBedCategoriesService, updateBedCategoryService, deleteBedCategoryService, createBedService, getBedService, getAllBedsService, updateBedService, deleteBedService, getAllAvailableBedService, assignBedService, unassignBedService } = require("../services/bed.service")
 
 exports.createBedCategory = async (req, res) => {
     try {
@@ -275,6 +275,88 @@ exports.deleteBed = async (req, res) => {
             status: "success",
             message: "Bed deleted successfully",
         })
+    } catch (error) {
+        res.status(500).json({
+            status: "fail",
+            error: error.message
+        })
+    }
+}
+
+exports.getAvailableBeds = async (req, res) => {
+    try {
+
+        const beds = await getAllAvailableBedService();
+
+        res.status(200).json({
+            status: "success",
+            data: beds,
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            status: "fail",
+            error: error.message
+        })
+    }
+}
+
+exports.assignBed = async (req, res) => {
+    try {
+
+        const bed = await assignBedService(req.params.id, req.body);
+
+        if (!bed.matchedCount) {
+            return res.status(404).json({
+                status: "fail",
+                message: "Bed not found"
+            })
+        }
+
+        if (!bed.modifiedCount) {
+            return res.status(400).json({
+                status: "fail",
+                message: "Bed not modified"
+            })
+        }
+
+        res.status(200).json({
+            status: "success",
+            message: "Bed assigned successfully",
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            status: "fail",
+            error: error.message
+        })
+    }
+}
+
+exports.unassignBed = async (req, res) => {
+    try {
+
+        const bed = await unassignBedService(req.params.id);
+
+        if (!bed.matchedCount) {
+            return res.status(404).json({
+                status: "fail",
+                message: "Bed not found"
+            })
+        }
+
+        if (!bed.modifiedCount) {
+            return res.status(400).json({
+                status: "fail",
+                message: "Bed not modified"
+            })
+        }
+
+        res.status(200).json({
+            status: "success",
+            message: "Bed unassigned successfully",
+        })
+
     } catch (error) {
         res.status(500).json({
             status: "fail",
