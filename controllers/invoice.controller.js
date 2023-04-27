@@ -1,4 +1,6 @@
-const { createInvoiceService, getAllInvoiceService, invByIdService, deleteInvoiceService, statusUpdateService } = require("../services/invoice.service")
+const ExcelJS = require('exceljs');
+const moment = require('moment');
+const { createInvoiceService, getAllInvoiceService, invByIdService, deleteInvoiceService, statusUpdateService, getMonthlyInvoiceService } = require("../services/invoice.service")
 
 exports.createInvoice = async (req, res) => {
     try {
@@ -104,7 +106,7 @@ exports.updateInvoiceStatus = async (req, res) => {
 
         const data = await statusUpdateService(req.params.invId)
 
-        if(!data.modifiedCount) return res.status(500).json({
+        if (!data.modifiedCount) return res.status(500).json({
             status: 'fail',
             error: 'Something went wrong'
         })
@@ -113,6 +115,59 @@ exports.updateInvoiceStatus = async (req, res) => {
             status: 'success',
             message: 'Payment status updated successfully'
         })
+    } catch (error) {
+        res.status(500).json({
+            status: 'fail',
+            error: error.message
+        })
+    }
+}
+
+exports.getMonthlyInvoice = async (req, res) => {
+    try {
+        const invoices = await getMonthlyInvoiceService()
+
+
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Monthly Invoice Report');
+
+        worksheet.columns = [
+            { header: 'Invoice No', key: 'serialId', width: 15 },
+            { header: 'Patient Name', key: 'patientName', width: 25 },
+            { header: 'Payments', key: 'payments', width: 25 },
+            { header: 'Sub-Total', key: 'sub_total', width: 15 },
+            { header: 'Discount %', key: 'discount', width: 15 },
+            { header: 'Tax %', key: 'tax', width: 15 },
+            { header: 'Grand-Total', key: 'grand_total', width: 15 },
+            { header: 'Invoice Date', key: 'createdAt', width: 20 },
+            { header: 'Created By', key: 'createdBy', width: 20 },
+        ];
+
+        invoices.forEach((invoice) => {
+            worksheet.addRow({
+                serialId: invoice.serialId,
+                patientName: invoice.patient.name,
+                payments: invoice.payments.map(payment => payment.name).join(', '),
+                sub_total: invoice.sub_total,
+                discount: invoice.discount,
+                tax: invoice.tax,
+                grand_total: invoice.grand_total,
+                createdAt: moment(invoice.createdAt).format('MM/DD/YYYY'),
+                createdBy: invoice.createdBy.firstName + " " + invoice.createdBy.lastName
+            });
+        });
+
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', `attachment; filename=monthly_report_${moment().format('MMMM_YYYY')}.xlsx`);
+
+        return workbook.xlsx.write(res)
+            .then(() => {
+                res.status(200).end();
+            })
+            .catch((err) => {
+                res.status(500).json({ error: err.message });
+            });
+
     } catch (error) {
         res.status(500).json({
             status: 'fail',

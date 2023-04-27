@@ -1,3 +1,4 @@
+const moment = require('moment');
 const Invoice = require("../models/Invoice")
 const Patient = require("../models/Patient")
 const Test = require("../models/Test")
@@ -74,10 +75,20 @@ exports.invByIdService = async (id) => {
 }
 
 exports.deleteInvoiceService = async (_id) => {
-    const invoice = await Invoice.findByIdAndDelete( _id )
-    await Patient.updateOne({ _id: invoice.patient }, { $pull: { invoices: _id }})
+    const invoice = await Invoice.findByIdAndDelete(_id)
+    await Patient.updateOne({ _id: invoice.patient }, { $pull: { invoices: _id } })
 }
 
 exports.statusUpdateService = async (id) => {
     return await Invoice.updateOne({ _id: id }, { paymentCompleted: true })
+}
+
+exports.getMonthlyInvoiceService = async () => {
+    return await Invoice.find({
+        createdAt: {
+            $gte: moment().startOf('month').toDate(),
+            $lte: moment().endOf('month').toDate()
+        }
+    }).populate('patient').populate('payments').populate('createdBy');
+
 }

@@ -1,3 +1,5 @@
+const excel = require('exceljs');
+const moment = require('moment');
 const { createExpenseCategoryService,
     getAllExpenseCategoriesService,
     getExpenseCategorybyIdService,
@@ -7,7 +9,8 @@ const { createExpenseCategoryService,
     getAllExpensesService,
     getExpenseByIdService,
     updateExpenseService,
-    deleteExpenseService
+    deleteExpenseService,
+    getMonthlyExpenseService
 } = require("../services/expense.service")
 
 exports.createExpenseCategory = async (req, res) => {
@@ -217,7 +220,7 @@ exports.getExpensebyId = async (req, res) => {
 exports.updateExpense = async (req, res) => {
     try {
 
-        if(!req.admin) return res.status(401).json({ status: "fail", message: "Unauthorized" })
+        if (!req.admin) return res.status(401).json({ status: "fail", message: "Unauthorized" })
 
         const expense = await getExpenseByIdService(req.params.expId)
 
@@ -283,4 +286,84 @@ exports.deleteExpense = async (req, res) => {
             error: error.message
         })
     }
+}
+
+exports.getMonthlyExpense = async (req, res) => {
+    try {
+        const expenses = await getMonthlyExpenseService();
+
+        if (!expenses || expenses.length === 0) {
+            return res.status(404).send('No expenses found for this month.');
+        }
+
+        // Create a new workbook and worksheet
+        const workbook = new excel.Workbook();
+        const worksheet = workbook.addWorksheet('Monthly Expenses');
+
+        // Define column headers and key
+        const columns = [
+            { header: 'Serial ID', key: 'serialId', width: 10 },
+            { header: 'Category', key: 'category', width: 30 },
+            { header: 'Amount', key: 'amount', width: 15 },
+            { header: 'Description', key: 'description', width: 50 },
+            { header: 'Date', key: 'date', width: 15 }
+        ];
+
+        // Set column headers and styles
+        worksheet.columns = columns;
+        const headerString = ['A1', 'B1', 'C1', 'D1', 'E1']
+        headerString.map((item) => {
+            worksheet.getCell(item).fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: '00CC99' },
+                bgColor: { argb: 'FFFFFF' }
+            };
+        })
+        worksheet.getRow(1).font = { color: { argb: 'FFFFFF' }, bold: true, size: 14 };
+
+        // Add data rows to worksheet
+        expenses.forEach((expense) => {
+            worksheet.addRow({
+                serialId: expense.serialId,
+                category: expense.category.name,
+                amount: expense.amount,
+                description: expense.description,
+                date: moment(expense.createdAt).format('DD/MMMM/YYYY')
+            });
+        });
+
+        const borderStyle = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' },
+        };
+        worksheet.eachRow({ includeEmpty: true }, function (row, rowNumber) {
+            row.eachCell(function (cell, colNumber) {
+                cell.border = borderStyle;
+            });
+        });
+
+        // Set response headers for file download
+        const fileName = `monthly_expenses_${moment().format('MMMM_YYYY')}.xlsx`;
+        res.setHeader(
+            'Content-Type',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        );
+        res.setHeader(
+            'Content-Disposition',
+            `attachment; filename=${fileName}`,
+        );
+
+        // Write workbook to response stream
+        await workbook.xlsx.write(res);
+
+        // End response
+        return res.end();
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send('Internal server error.');
+    }
+
 }

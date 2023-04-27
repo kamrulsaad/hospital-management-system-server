@@ -8,6 +8,8 @@ const verifyToken = require('../middlewares/verifyToken')
 
 router.get('/all-invoices', verifyToken, paginate, invController.getAllInvoice)
 
+router.get('/monthly-invoices', verifyAdmin, invController.getMonthlyInvoice)
+
 router.post('/create/:patientId', verifyToken, verifyAccountant, invController.createInvoice)
 
 router.get("/qr/:invId", invController.getInvoiceQR)

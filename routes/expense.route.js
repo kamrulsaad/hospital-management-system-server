@@ -9,6 +9,8 @@ router.post("/create", verifyToken, expController.createExpense)
 
 router.get('/all', verifyToken, paginate, expController.getAllExpenses)
 
+router.get("/monthly-expense", verifyAdmin, expController.getMonthlyExpense)
+
 router.route('/:expId')
     .get(verifyToken, expController.getExpensebyId)
     .post(verifyAdmin, expController.updateExpense)

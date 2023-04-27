@@ -1,3 +1,4 @@
+const moment = require("moment");
 const Expense = require("../models/Expense");
 const ExpenseCategory = require("../models/ExpenseCategories");
 
@@ -81,4 +82,13 @@ exports.updateExpenseService = async (id, data) => {
 
 exports.deleteExpenseService = async (id) => {
     return await Expense.deleteOne({ _id: id })
+}
+
+exports.getMonthlyExpenseService = async () => {
+    return  await Expense.find({
+        createdAt: {
+            $gte: moment().startOf('month').toDate(),
+            $lte: moment().endOf('month').toDate(),
+        },
+    }).populate('category', 'name');
 }
