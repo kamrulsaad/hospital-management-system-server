@@ -63,6 +63,16 @@ const patientSchema = mongoose.Schema(
             unique: true
         },
 
+        admitted: {
+            type: Boolean,
+            default: false
+        },
+
+        bed: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Bed',
+        },
+
         invoices: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Invoice',

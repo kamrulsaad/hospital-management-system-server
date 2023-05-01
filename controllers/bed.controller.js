@@ -336,7 +336,7 @@ exports.assignBed = async (req, res) => {
 exports.unassignBed = async (req, res) => {
     try {
 
-        const bed = await unassignBedService(req.params.id);
+        const bed = await unassignBedService(req.params.id, req.body);
 
         if (!bed.matchedCount) {
             return res.status(404).json({

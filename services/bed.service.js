@@ -1,5 +1,6 @@
 const Bed = require("../models/Bed");
 const BedCategory = require("../models/BedCategory");
+const Patient = require("../models/Patient");
 
 exports.createBedCategoryService = async (data) => {
     return await BedCategory.create(data);
@@ -76,10 +77,12 @@ exports.deleteBedService = async (id) => {
 }
 
 exports.assignBedService = async (id, data) => {
+    await Patient.updateOne({ _id: data.patient }, { $set: { admitted: true, bed: id } })
     return await Bed.updateOne({ _id: id }, { $set: { patient: data.patient, status: false } })
 }
 
-exports.unassignBedService = async (id) => {
+exports.unassignBedService = async (id, data) => {
+    await Patient.updateOne({ _id: data.patient }, { $set: { admitted: false, bed: null } })
     return await Bed.updateOne({ _id: id }, { $set: { patient: null, status: true } })
 }
 
