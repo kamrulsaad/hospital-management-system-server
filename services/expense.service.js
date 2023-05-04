@@ -1,6 +1,7 @@
 const moment = require("moment");
 const Expense = require("../models/Expense");
 const ExpenseCategory = require("../models/ExpenseCategories");
+const Invoice = require("../models/Invoice");
 
 exports.createExpenseCategoryService = async (data) => {
     const expenseCategory = await ExpenseCategory.create(data);
@@ -94,6 +95,7 @@ exports.getMonthlyExpenseService = async () => {
 }
 
 exports.getIncomeStatementService = async () => {
+
     const startDate = moment().startOf("month").toDate();
     const endDate = moment().endOf("month").toDate();
 

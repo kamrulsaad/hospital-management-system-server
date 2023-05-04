@@ -371,7 +371,7 @@ exports.getMonthlyExpense = async (req, res) => {
 exports.getIncomeStatement = async (req, res) => {
     try {
 
-        const { totalIncome, totalExpenses, expenses, invoices } = await getIncomeStatementService();
+        const { totalIncome, totalExpenses, expenses } = await getIncomeStatementService();
 
         // Create a new excel workbook and worksheet
         const workbook = new excel.Workbook();
@@ -380,7 +380,7 @@ exports.getIncomeStatement = async (req, res) => {
         // Define the worksheet columns
         worksheet.columns = [
             { header: "Category", key: "category", width: 20 },
-            { header: "Description", key: "description", width: 30 },
+            { header: "Description", key: "description", width: 50 },
             { header: "Amount", key: "amount", width: 15 },
         ];
 
@@ -422,8 +422,10 @@ exports.getIncomeStatement = async (req, res) => {
                 res.end();
             })
             .catch((err) => {
-                console.log(err);
-                res.status(500).send("Error generating excel file");
+                res.status(500).json({
+                    status: "fail",
+                    error: err.message
+                });
             });
     } catch (error) {
         return res.status(500).send('Internal server error.');
