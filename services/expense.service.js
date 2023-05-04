@@ -85,10 +85,35 @@ exports.deleteExpenseService = async (id) => {
 }
 
 exports.getMonthlyExpenseService = async () => {
-    return  await Expense.find({
+    return await Expense.find({
         createdAt: {
             $gte: moment().startOf('month').toDate(),
             $lte: moment().endOf('month').toDate(),
         },
     }).populate('category', 'name');
+}
+
+exports.getIncomeStatementService = async () => {
+    const startDate = moment().startOf("month").toDate();
+    const endDate = moment().endOf("month").toDate();
+
+    const expenses = await Expense.find({
+        createdAt: { $gte: startDate, $lte: endDate }
+    }).populate("category");
+    const invoices = await Invoice.find({
+        createdAt: { $gte: startDate, $lte: endDate },
+        paymentCompleted: true
+    }).populate("patient");
+
+    // Calculate the total income and expenses for the current month
+    const totalIncome = invoices.reduce(
+        (acc, invoice) => acc + invoice.grand_total,
+        0
+    );
+    const totalExpenses = expenses.reduce(
+        (acc, expense) => acc + expense.amount,
+        0
+    );
+
+    return { totalIncome, totalExpenses, expenses, invoices };
 }

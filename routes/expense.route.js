@@ -11,6 +11,8 @@ router.get('/all', verifyToken, paginate, expController.getAllExpenses)
 
 router.get("/monthly-expense", verifyAdmin, expController.getMonthlyExpense)
 
+router.get("/income-statement", verifyAdmin, expController.getIncomeStatement)
+
 router.route('/:expId')
     .get(verifyToken, expController.getExpensebyId)
     .post(verifyAdmin, expController.updateExpense)

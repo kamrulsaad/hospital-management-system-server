@@ -10,7 +10,8 @@ const { createExpenseCategoryService,
     getExpenseByIdService,
     updateExpenseService,
     deleteExpenseService,
-    getMonthlyExpenseService
+    getMonthlyExpenseService,
+    getIncomeStatementService
 } = require("../services/expense.service")
 
 exports.createExpenseCategory = async (req, res) => {
@@ -362,8 +363,69 @@ exports.getMonthlyExpense = async (req, res) => {
         // End response
         return res.end();
     } catch (err) {
-        console.error(err);
         return res.status(500).send('Internal server error.');
     }
 
+}
+
+exports.getIncomeStatement = async (req, res) => {
+    try {
+
+        const { totalIncome, totalExpenses, expenses, invoices } = await getIncomeStatementService();
+
+        // Create a new excel workbook and worksheet
+        const workbook = new excel.Workbook();
+        const worksheet = workbook.addWorksheet("Income Statement");
+
+        // Define the worksheet columns
+        worksheet.columns = [
+            { header: "Category", key: "category", width: 20 },
+            { header: "Description", key: "description", width: 30 },
+            { header: "Amount", key: "amount", width: 15 },
+        ];
+
+        // Add the expenses data to the worksheet
+        expenses.forEach((expense) => {
+            worksheet.addRow({
+                category: expense.category.name,
+                description: expense.description,
+                amount: expense.amount,
+            });
+        });
+
+        // Add a blank row to separate the expenses and income sections
+        worksheet.addRow({});
+
+        // Add the income data to the worksheet
+        worksheet.addRow({ category: "Total Income", amount: totalIncome });
+
+        // Add a blank row to separate the income and expenses sections
+        worksheet.addRow({});
+
+        // Add the total expenses and net income to the worksheet
+        worksheet.addRow({ category: "Total Expenses", amount: totalExpenses });
+        worksheet.addRow({ category: "Net Income", amount: totalIncome - totalExpenses });
+
+        // Set the worksheet formatting
+        worksheet.eachRow((row) => {
+            row.eachCell((cell) => {
+                cell.alignment = { vertical: "middle", horizontal: "left" };
+            });
+        });
+
+        // Generate the excel file and send it as a response
+        res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        res.setHeader("Content-Disposition", "attachment; filename=income_statement.xlsx");
+
+        workbook.xlsx.write(res)
+            .then(() => {
+                res.end();
+            })
+            .catch((err) => {
+                console.log(err);
+                res.status(500).send("Error generating excel file");
+            });
+    } catch (error) {
+        return res.status(500).send('Internal server error.');
+    }
 }
