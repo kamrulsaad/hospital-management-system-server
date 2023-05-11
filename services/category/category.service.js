@@ -32,4 +32,13 @@ exports.getCategoryByIdService = async (id) => {
         select: '-__v -mainCategory'
     });
     return category;
-}   
+}
+
+exports.deleteCategoryService = async (id) => {
+    const category = await MainCategory.deleteOne({ _id: id });
+    return category;
+}
+
+exports.updateCategoryService = async (id, data) => {
+    return await MainCategory.updateOne({ _id: id }, { $set: data })
+}

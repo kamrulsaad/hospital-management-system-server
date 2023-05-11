@@ -10,8 +10,9 @@ router.get('/all', paginate, categoryController.allCategory)
 
 router.post('/create', categoryController.createCategory)
 
-// router.route('/:categoryId')
-// .delete(verifyAdmin, categoryController.deleteCategory)
-// .post(verifyAdmin, categoryController.updateCategory)
+router.route('/:categoryId')
+    .get(categoryController.getCategoryById)
+    .patch(categoryController.updateCategory)
+    .delete(categoryController.deleteCategory)
 
 module.exports = router
