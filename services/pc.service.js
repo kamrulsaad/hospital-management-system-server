@@ -1,3 +1,4 @@
+const e = require("express");
 const PC = require("../models/PC");
 const { findUserByEmailService } = require("./user.service");
 
@@ -30,6 +31,27 @@ exports.getAllService = async (pagination) => {
         serialId: 1,
     }).skip(startIndex).limit(limit);
 
-    return {pcs, total}
+    return { pcs, total }
 
+}
+
+exports.getPCByIdService = async (id) => {
+    return await PC.findById(id).populate([
+        {
+            path: 'commission.tests',
+            select: 'name',
+        },
+        {
+            path: 'addedBy',
+            select: 'name role email',
+        }
+    ]);
+}
+
+exports.updatePCService = async (id, data) => {
+    return await PC.updateOne({ _id: id }, { $set: data });
+}
+
+exports.deletePCService = async (id) => {
+    return await PC.deleteOne({ _id: id });
 }

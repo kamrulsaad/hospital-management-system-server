@@ -8,4 +8,9 @@ router.post('/register', verifyToken, pcController.register)
 
 router.get('/all', paginate, verifyToken, pcController.getAll)
 
+router.route("/:id")
+    .get(verifyToken, pcController.gePCById)
+    .patch(verifyToken, pcController.updatePC)
+    .delete(verifyToken, pcController.deletePC)
+
 module.exports = router;
