@@ -17,6 +17,7 @@ const categoryRoute = require('./routes/category.route')
 const testRoute = require('./routes/test.route');
 const expenseRoute = require('./routes/expense.route');
 const bedRoute = require('./routes/bed.route');
+const pcRoute = require('./routes/pc.route');
 const verifyToken = require('./middlewares/verifyToken');
 const dashboard = require('./utils/dashboard');
 
@@ -34,5 +35,6 @@ app.use("/api/v1/category", categoryRoute);
 app.use('/api/v1/test', testRoute);
 app.use('/api/v1/expense', expenseRoute);
 app.use('/api/v1/bed', bedRoute);
+app.use('/api/v1/pc', pcRoute);
 
 module.exports = app
