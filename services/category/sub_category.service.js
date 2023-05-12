@@ -11,20 +11,20 @@ exports.createSubCategoryService = async (data) => {
     return subCategory;
 }
 
-exports.allSubCategoryService = async ( pagination) => {
+exports.allSubCategoryService = async () => {
+    const subCategories = await SubCategory.find({}, { __v: 0, mainCategory: 0 });
+    return subCategories;
+}
 
-    const { key, value } = pagination
+exports.getSubCategoryByIdService = async (id) => {
+    const subCategory = await SubCategory.findById(id, { __v: 0 }).populate('mainCategory', { __v: 0, subCategories: 0 });
+    return subCategory;
+}
 
-    const query = key ? {
-        [key]: {
-            $regex: value,
-            $options: 'i'
-        }
-    } : {};
+exports.updateSubCategoryService = async (id, data) => {
+    return await SubCategory.updateOne({ _id: id }, { $set: data });
+}
 
-    const total = await SubCategory.find(query).countDocuments()
-
-    const subCategories = await SubCategory.find(query, { mainCategory: 0 });
-
-    return {subCategories, total};
+exports.deleteSubCategoryService = async (id) => {
+    return await SubCategory.deleteOne({ _id: id });
 }
