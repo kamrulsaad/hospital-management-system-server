@@ -5,9 +5,11 @@ const testSchema = mongoose.Schema(
     {
         category: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Category',
+            ref: 'SubCategory',
         },
         file_url: String,
+        result: String,
+        pcCommission: Number,
         patient: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Patient',
@@ -24,7 +26,7 @@ const testSchema = mongoose.Schema(
             type: Boolean,
             default: false
         },
-        description: String
+        remarks: String
     },
     {
         timestamps: true,

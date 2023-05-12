@@ -9,38 +9,60 @@ const invoiceSchema = mongoose.Schema({
     },
 
     payments: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category',
-        requires: [true, 'Please provide category of payments']
+        test: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'SubCategory',
+        },
+        pcCommision: {
+            type: Number,
+            required: [true, "Please provide amount value"],
+            min: [0, "Amount cannot be negative"]
+        },
     }],
 
     sub_total: {
         type: Number,
         required: [true, "Please Provide total value"],
-        min: [0, "Sub-total amount cannot be negative"]
+        min: [0, "Sub-total amount cannot be negative"],
     },
 
     discount: {
         type: Number,
         default: 0,
-        min: [0, "Discount percentage cannot be negative"],
-        max: [100, 'Discount percentage cannot be more than 100']
+        min: [0, "Discount value cannot be negative"],
     },
 
-    tax: {
+    VAT: {
         type: Number,
         default: 0,
-        min: [0, "Tax percentage cannot be negative"],
-        max: [100, 'Tax percentage cannot be more than 100']
+        min: [0, "VAT percentage cannot be negative"],
+        max: [100, 'VAT percentage cannot be more than 100']
     },
+
+    referredBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "PC",
+    },
+
+    total_PC_Commission: {
+        type: Number,
+        min: [0, "Total PC Commission cannot be negative"],
+        validate: function () {
+            let total = 0;
+            this.payments.forEach((payment) => {
+                total += payment.pcCommision;
+            });
+            return total === this.total_PC_Commission;
+        }
+    },
+
     grand_total: {
         type: Number,
         required: [true, "Please provide grand-total value"],
         min: [0, "Grand-total amount cannot be negative"],
         validate: {
             validator: function () {
-                const temp_total = this.sub_total + this.sub_total * (this.tax / 100);
-                const grand_total = Math.round(temp_total - temp_total * (this.discount / 100))
+                const grand_total = this.sub_total - this.discount + ((this.sub_total * this.VAT) / 100);
                 return grand_total === this.grand_total;
             },
             message:

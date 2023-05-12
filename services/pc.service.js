@@ -36,17 +36,33 @@ exports.getAllService = async (pagination) => {
 }
 
 exports.getPCByIdService = async (id) => {
-    return await PC.findById(id).populate([
-        {
-            path: 'commission.tests',
-            select: 'name',
-        },
-        {
-            path: 'addedBy',
-            select: 'name role email',
-        }
-    ]);
-}
+    return await PC.findById(id)
+        .populate([
+            {
+                path: 'commission.tests',
+                populate: [
+                    {
+                        path: 'category',
+                        select: 'name'
+                    },
+                    {
+                        path: 'patient',
+                        select: 'name'
+                    },
+                    {
+                        path: 'createdBy',
+                        select: 'firstName lastName role email'
+                    }
+                ]
+            },
+            {
+                path: 'addedBy',
+                select: 'firstName lastName role email'
+            }
+        ])
+};
+
+
 
 exports.updatePCService = async (id, data) => {
     return await PC.updateOne({ _id: id }, { $set: data });

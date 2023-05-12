@@ -2,35 +2,46 @@ const moment = require('moment');
 const Invoice = require("../models/Invoice")
 const Patient = require("../models/Patient")
 const Test = require("../models/Test")
-const { findUserByEmailService } = require("./user.service")
+const { findUserByEmailService } = require("./user.service");
+const PC = require('../models/PC');
 
 exports.createInvoiceService = async (info, user, patient) => {
+    const { _id: createdBy } = await findUserByEmailService(user.email);
+    info = { ...info, createdBy, patient };
+    const invoice = await Invoice.create(info);
 
-    const { _id: createdBy } = await findUserByEmailService(user.email)
-
-    info = { ...info, createdBy, patient }
-
-    const invoice = await Invoice.create(info)
-
-    const categoryIds = invoice.payments.map((payment) => ({ category: payment }));
-
-    const tests = await Promise.all(categoryIds.map(async (categoryId) => {
+    const tests = await Promise.all(invoice.payments.map(async (payment) => {
         const test = new Test({
-            category: categoryId.category,
+            category: payment.test,
             patient,
-            createdBy
+            createdBy,
+            pcCommission: payment.pcCommision
         });
         await test.save();
-        return test._id;
+        return test._id.toString(); // Convert _id to string
     }));
+
+    await PC.updateOne(
+        {
+            _id: invoice.referredBy
+        },
+        {
+            $push: {
+                'commission.tests': {$each: tests}
+            },
+            $inc: {
+                'commission.total': invoice.total_PC_Commission
+            }
+        }
+    );
 
     await Patient.updateOne(
         { _id: patient },
         { $push: { tests: { $each: tests }, invoices: invoice._id } }
     );
 
-    return invoice
-}
+    return invoice;
+};
 
 exports.getAllInvoiceService = async (pagination) => {
 

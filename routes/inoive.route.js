@@ -10,11 +10,11 @@ router.get('/all-invoices', verifyToken, paginate, invController.getAllInvoice)
 
 router.get('/monthly-invoices', verifyAdmin, invController.getMonthlyInvoice)
 
-router.post('/create/:patientId', verifyToken, verifyAccountant, invController.createInvoice)
+router.post('/create/:patientId', verifyToken, invController.createInvoice)
 
 router.get("/qr/:invId", invController.getInvoiceQR)
 
-router.get("/status/:invId", verifyToken, verifyAccountant, invController.updateInvoiceStatus)
+router.get("/status/:invId", verifyToken, invController.updateInvoiceStatus)
 
 router.route('/:invId')
     .get(verifyToken, invController.findInvById)
