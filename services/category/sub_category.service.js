@@ -12,12 +12,15 @@ exports.createSubCategoryService = async (data) => {
 }
 
 exports.allSubCategoryService = async () => {
-    const subCategories = await SubCategory.find({}, { __v: 0, mainCategory: 0 });
+    const subCategories = await SubCategory.find({}, { __v: 0, mainCategory: 0 })
     return subCategories;
 }
 
 exports.getSubCategoryByIdService = async (id) => {
-    const subCategory = await SubCategory.findById(id, { __v: 0 }).populate('mainCategory', { __v: 0, subCategories: 0 });
+    const subCategory = await SubCategory.findById(id, { __v: 0 }).populate('mainCategory', {
+        __v: 0,
+        subCategories: 0
+    });
     return subCategory;
 }
 

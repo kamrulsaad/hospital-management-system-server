@@ -1,4 +1,4 @@
-const { default: mongoose } = require("mongoose");
+const { mongoose } = require("mongoose");
 
 const SubCategorySchema = new mongoose.Schema({
     name: {
@@ -30,16 +30,19 @@ const SubCategorySchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['main', 'description', "file"],
+        enum: ["main", "description", "file"],
         default: 'main',
     },
-    file_url: String,
-    image_url: String,
-    normalValue: {
+    nature: {
         type: String,
-        required: [true, 'Please add a normal values'],
-        trim: true,
+        required: [true, 'Please add a nature of examination'],
     },
+    tests: [
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'TestName',
+        }
+    ],
 });
 
 const SubCategory = mongoose.model('SubCategory', SubCategorySchema);

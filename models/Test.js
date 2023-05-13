@@ -8,7 +8,15 @@ const testSchema = mongoose.Schema(
             ref: 'SubCategory',
         },
         file_url: String,
-        result: String,
+        image_url: String,
+        results: [{
+            test: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'TestName',
+            },
+            result: String,
+        }
+        ],
         pcCommission: Number,
         patient: {
             type: mongoose.Schema.Types.ObjectId,
@@ -22,7 +30,15 @@ const testSchema = mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
         },
+        invoiceId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Invoice',
+        },
         available: {
+            type: Boolean,
+            default: false
+        },
+        allowed: {
             type: Boolean,
             default: false
         },
