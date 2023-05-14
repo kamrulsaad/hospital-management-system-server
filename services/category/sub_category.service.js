@@ -17,10 +17,16 @@ exports.allSubCategoryService = async () => {
 }
 
 exports.getSubCategoryByIdService = async (id) => {
-    const subCategory = await SubCategory.findById(id, { __v: 0 }).populate('mainCategory', {
-        __v: 0,
-        subCategories: 0
-    });
+    const subCategory = await SubCategory.findById(id, { __v: 0 }).populate([
+        {
+            path: 'mainCategory',
+            select: 'name'
+        },
+        {
+            path: 'tests',
+            select: '-__v -subCategory'
+        }
+    ]);
     return subCategory;
 }
 

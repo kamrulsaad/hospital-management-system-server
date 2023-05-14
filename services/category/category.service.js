@@ -1,4 +1,5 @@
 const MainCategory = require("../../models/categories/MainCategory");
+const SubCategory = require("../../models/categories/SubCategory");
 
 exports.createCategoryService = async (data) => {
 
@@ -35,6 +36,9 @@ exports.getCategoryByIdService = async (id) => {
 }
 
 exports.deleteCategoryService = async (id) => {
+
+    await SubCategory.deleteMany({ mainCategory: id });
+
     const category = await MainCategory.deleteOne({ _id: id });
     return category;
 }
