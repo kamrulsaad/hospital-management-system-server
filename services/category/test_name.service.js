@@ -20,5 +20,6 @@ exports.updateTestNameService = async (id, data) => {
 }
 
 exports.deleteTestNameService = async (id) => {
+    await SubCategory.updateOne({ tests: id }, { $pull: { tests: id } });
     return await TestName.deleteOne({ _id: id });
 }

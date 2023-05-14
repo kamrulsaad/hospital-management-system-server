@@ -67,7 +67,6 @@ exports.deleteTestName = async (req, res) => {
         res.status(200).json({
             success: "success",
             message: "Test name deleted successfully",
-            data: testName,
         });
     } catch (err) {
         res.status(400).json({
