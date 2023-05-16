@@ -18,7 +18,7 @@ exports.createInvoiceService = async (info, user, patient) => {
             pcCommission: payment.pcCommision
         });
         await test.save();
-        return test._id.toString(); // Convert _id to string
+        return test._id.toString(); 
     }));
 
     await PC.updateOne(

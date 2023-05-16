@@ -1,5 +1,6 @@
 const SubCategory = require("../../models/categories/SubCategory");
 const MainCategory = require("../../models/categories/MainCategory");
+const TestName = require("../../models/categories/TestName");
 
 exports.createSubCategoryService = async (data) => {
 
@@ -35,5 +36,10 @@ exports.updateSubCategoryService = async (id, data) => {
 }
 
 exports.deleteSubCategoryService = async (id) => {
+
+    await MainCategory.updateOne({ subCategories: id }, { $pull: { subCategories: id } });
+
+    await TestName.deleteMany({ subCategory: id });
+
     return await SubCategory.deleteOne({ _id: id });
 }

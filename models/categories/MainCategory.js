@@ -9,7 +9,6 @@ const MainCategorySchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        required: [true, 'Please add a description'],
         trim: true,
     },
     subCategories: [
