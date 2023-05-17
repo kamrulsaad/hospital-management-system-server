@@ -8,17 +8,19 @@ const invoiceSchema = mongoose.Schema({
         required: [true, "Please provide patient Id"]
     },
 
-    payments: [{
-        test: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'SubCategory',
-        },
-        pcCommision: {
-            type: Number,
-            required: [true, "Please provide amount value"],
-            min: [0, "Amount cannot be negative"]
-        },
-    }],
+    payments: {
+        tests: [{
+            test: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'SubCategory',
+            },
+            pcCommision: {
+                type: Number,
+                default: 0,
+                min: [0, "Amount cannot be negative"]
+            },
+        }],
+    },
 
     sub_total: {
         type: Number,

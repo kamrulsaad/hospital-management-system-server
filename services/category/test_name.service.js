@@ -23,3 +23,10 @@ exports.deleteTestNameService = async (id) => {
     await SubCategory.updateOne({ tests: id }, { $pull: { tests: id } });
     return await TestName.deleteOne({ _id: id });
 }
+
+exports.testNameByIdService = async (id) => {
+    return await TestName.findById(id).populate({
+        path: 'subCategory',
+        select: 'name'
+    });
+}

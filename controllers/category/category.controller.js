@@ -40,8 +40,6 @@ exports.allCategory = async (req, res) => {
             message: 'Category created successfully',
             data: category,
             total,
-            page: req.pagination.page,
-            count: req.pagination.limit
         })
     }
     catch (error) {
