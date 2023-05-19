@@ -6,6 +6,7 @@ const testSchema = mongoose.Schema(
         category: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'SubCategory',
+            required: [true, 'Please provide category Id'],
         },
         file_url: String,
         image_url: String,
@@ -17,7 +18,6 @@ const testSchema = mongoose.Schema(
             result: String,
         }
         ],
-        pcCommission: Number,
         patient: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Patient',

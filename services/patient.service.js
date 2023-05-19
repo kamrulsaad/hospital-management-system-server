@@ -13,6 +13,14 @@ exports.findPatientbyIdService = async (_id) => {
         select: "sub_total grand_total createdAt serialId paymentCompleted",
     },
     {
+        path: 'bed',
+        select: 'name',
+        populate: {
+            path: 'category',
+            select: 'name charge -_id'
+        }
+    },  
+    {
         path: "tests",
         select: "createdAt serialId available file_url",
         populate: {

@@ -8,19 +8,55 @@ const invoiceSchema = mongoose.Schema({
         required: [true, "Please provide patient Id"]
     },
 
-    payments: {
-        tests: [{
-            test: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'SubCategory',
-            },
-            pcCommision: {
-                type: Number,
-                default: 0,
-                min: [0, "Amount cannot be negative"]
-            },
-        }],
+    tests: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'SubCategory',
+    }],
+
+    bedding: {
+        bed: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Bed"
+        },
+        charge: {
+            type: Number,
+            default: 0,
+            min: [0, "Bedding charge cannot be negative"],
+            validator: {
+                validator: function () {
+                    if (this.bed) return this.charge === (this.bed.charge * this.days);
+                    return true;
+                }
+            }
+        },
+        days: {
+            type: Number,
+            default: 0,
+            min: [0, "Bedding days cannot be negative"]
+        }
     },
+
+    medicineCharge: {
+        type: Number,
+        default: 0,
+        min: [0, "Medicine charge cannot be negative"]
+    },
+
+    serviceCharge: {
+        type: Number,
+        default: 0,
+        min: [0, "Service charge cannot be negative"]
+    },
+
+    otherCharges: [
+        {
+            name: String,
+            amount: {
+                type: Number,
+                min: [0, "Amount cannot be negative"]
+            }
+        }
+    ],
 
     sub_total: {
         type: Number,
@@ -35,27 +71,59 @@ const invoiceSchema = mongoose.Schema({
     },
 
     VAT: {
+        vatPercentage: {
+            type: Number,
+            default: 0,
+            min: [0, "VAT percentage cannot be negative"],
+            max: [100, 'VAT percentage cannot be more than 100']
+        },
+        vatAmount: {
+            type: Number,
+            default: 0,
+            min: [0, "VAT amount cannot be negative"],
+            validate: {
+                validator: function () {
+                    const vatAmount = Math.ceil(this.sub_total * (this.VAT.vatPercentage/ 100));
+                    return vatAmount === this.VAT.vatAmount;
+                },
+                message: "VAT amount value is incorrect. Please ensure that it is calculated correctly."
+            }
+        }
+    },
+
+    paidAmount: {
         type: Number,
         default: 0,
-        min: [0, "VAT percentage cannot be negative"],
-        max: [100, 'VAT percentage cannot be more than 100']
+        min: [0, "Paid Amount cannot be negative"],
     },
+
+    dueAmount: {
+        type: Number,
+        default: 0,
+        min: [0, "Due Amount cannot be negative"],
+        validate: {
+            validator: function () {
+                const dueAmount = this.grand_total - this.paidAmount;
+                return dueAmount === this.dueAmount;
+            },
+            message: "Due Amount value is incorrect. Please ensure that it is calculated correctly."
+        }
+    },
+
 
     referredBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "PC",
     },
 
+    appointedTo: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    },
+
     total_PC_Commission: {
         type: Number,
         min: [0, "Total PC Commission cannot be negative"],
-        validate: function () {
-            let total = 0;
-            this.payments.forEach((payment) => {
-                total += payment.pcCommision;
-            });
-            return total === this.total_PC_Commission;
-        }
     },
 
     grand_total: {
@@ -64,7 +132,7 @@ const invoiceSchema = mongoose.Schema({
         min: [0, "Grand-total amount cannot be negative"],
         validate: {
             validator: function () {
-                const grand_total = this.sub_total - this.discount + ((this.sub_total * this.VAT) / 100);
+                const grand_total = this.sub_total - this.discount + this.VAT.vatAmount;
                 return grand_total === this.grand_total;
             },
             message:
@@ -75,11 +143,6 @@ const invoiceSchema = mongoose.Schema({
     serialId: {
         type: String,
         unique: true
-    },
-
-    paymentCompleted: {
-        type: Boolean,
-        default: false
     },
 
     createdBy: {

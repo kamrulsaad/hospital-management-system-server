@@ -5,14 +5,11 @@ const { createInvoiceService, getAllInvoiceService, invByIdService, deleteInvoic
 exports.createInvoice = async (req, res) => {
     try {
 
-        const invoice = await createInvoiceService(req.body, req.user, req.params.patientId)
-
-        invoice.save()
+        await createInvoiceService(req.body, req.user, req.params.patientId)
 
         res.status(200).json({
             status: "success",
             message: 'Invoice Generated',
-            data: invoice
         })
     } catch (error) {
         res.status(500).json({

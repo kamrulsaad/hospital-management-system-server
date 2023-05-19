@@ -29,14 +29,12 @@ exports.getAll = async (req, res) => {
 
         res.status(200).json({
             status: 'success',
-            data: {
-                pcs,
-                page,
-                total,
-                count: limit,
-                key,
-                value,
-            }
+            data: pcs,
+            page,
+            total,
+            count: limit,
+            key,
+            value,
         });
 
     } catch (err) {

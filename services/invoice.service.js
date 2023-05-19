@@ -10,35 +10,56 @@ exports.createInvoiceService = async (info, user, patient) => {
     info = { ...info, createdBy, patient };
     const invoice = await Invoice.create(info);
 
-    const tests = await Promise.all(invoice.payments.map(async (payment) => {
-        const test = new Test({
-            category: payment.test,
-            patient,
+    const tests = await Promise.all(info.tests.map(async (test) => {
+        let testData = {
+            category: test._id,
             createdBy,
-            pcCommission: payment.pcCommision
-        });
-        await test.save();
-        return test._id.toString(); 
-    }));
+            patient,
+            invoiceId: invoice._id
+        }
 
-    await PC.updateOne(
-        {
-            _id: invoice.referredBy
-        },
-        {
-            $push: {
-                'commission.tests': {$each: tests}
-            },
-            $inc: {
-                'commission.total': invoice.total_PC_Commission
+        const testResult = await Test.create(testData);
+
+        if (test.type === "main") {
+            const results = await Promise.all(test.tests.map(async (result) => {
+                return {
+                    test: result,
+                    result: ""
+                }
+            }
+            ))
+            testData = {
+                ...testData,
+                results
             }
         }
-    );
+
+        testResult.save();
+
+        return testResult._id;
+
+    }));
+
+    // await PC.updateOne(
+    //     {
+    //         _id: invoice.referredBy
+    //     },
+    //     {
+    //         $push: {
+    //             'commission.tests': {$each: tests}
+    //         },
+    //         $inc: {
+    //             'commission.total': invoice.total_PC_Commission
+    //         }
+    //     }
+    // );
 
     await Patient.updateOne(
         { _id: patient },
         { $push: { tests: { $each: tests }, invoices: invoice._id } }
     );
+
+    invoice.save();
 
     return invoice;
 };
@@ -60,8 +81,8 @@ exports.getAllInvoiceService = async (pagination) => {
 
     const invoices = await Invoice.find(query).populate({
         path: 'patient',
-        select: "serialId phone name"
-    }).select("serialId sub_total createdAt paymentCompleted grand_total").sort({ "serialId": -1 }).skip(startIndex).limit(limit);
+        select: "name -_id"
+    }).select("serialId sub_total createdAt dueAmount grand_total").sort({ "serialId": -1 }).skip(startIndex).limit(limit);
 
     return {
         invoices, total
@@ -75,14 +96,18 @@ exports.invByIdService = async (id) => {
             select: "serialId phone name"
         },
         {
-            path: "payments",
-            select: "name amount "
+            path: "tests",
+            select: "name charge pcRate"
         },
         {
             path: "createdBy",
             select: "phone email role firstName lastName"
+        },
+        {
+            path: "bedding.bed",
+            select: "name"
         }
-    ]).select("grand_total sub_total paymentCompleted createdAt tax discount serialId")
+    ])
 }
 
 exports.deleteInvoiceService = async (_id) => {
