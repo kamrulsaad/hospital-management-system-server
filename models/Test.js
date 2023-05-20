@@ -42,6 +42,7 @@ const testSchema = mongoose.Schema(
             type: Boolean,
             default: false
         },
+        deliveryDate : Date,
         remarks: String
     },
     {

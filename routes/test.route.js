@@ -14,6 +14,7 @@ router.delete("/remove/:testId", verifyToken, testController.removeFile);
 
 router.route("/:testId")
 .get(testController.getTest)
+.patch(verifyAdmin, testController.updateTest)
 .delete(verifyAdmin, testController.deleteTest);
 
 module.exports = router;

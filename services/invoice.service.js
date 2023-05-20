@@ -7,18 +7,24 @@ const PC = require('../models/PC');
 
 exports.createInvoiceService = async (info, user, patient) => {
     const { _id: createdBy } = await findUserByEmailService(user.email);
+
+    if (info.paidAmount === 0) {
+        info.dueAmount = info.grand_total;
+    }
+
     info = { ...info, createdBy, patient };
+
+
     const invoice = await Invoice.create(info);
 
     const tests = await Promise.all(info.tests.map(async (test) => {
+
         let testData = {
             category: test._id,
             createdBy,
             patient,
             invoiceId: invoice._id
         }
-
-        const testResult = await Test.create(testData);
 
         if (test.type === "main") {
             const results = await Promise.all(test.tests.map(async (result) => {
@@ -33,6 +39,8 @@ exports.createInvoiceService = async (info, user, patient) => {
                 results
             }
         }
+
+        const testResult = await Test.create(testData);
 
         testResult.save();
 
@@ -82,7 +90,7 @@ exports.getAllInvoiceService = async (pagination) => {
     const invoices = await Invoice.find(query).populate({
         path: 'patient',
         select: "name -_id"
-    }).select("serialId sub_total createdAt dueAmount grand_total").sort({ "serialId": -1 }).skip(startIndex).limit(limit);
+    }).select("serialId createdAt dueAmount grand_total").sort({ "serialId": -1 }).skip(startIndex).limit(limit);
 
     return {
         invoices, total

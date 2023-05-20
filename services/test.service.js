@@ -7,15 +7,22 @@ exports.findTestByIdService = async (testId) => {
     return await Test.findById(testId).populate([
         {
             path: "category",
-            select: "name -_id"
+            select: "name type nature -_id"
         },
         {
             path: "patient",
-            select: "name -_id serialId"
+            select: "name age gender -_id serialId"
         },
         {
             path: "createdBy",
-            select: "firstName lastName phone -_id"
+            select: "firstName lastName -_id"
+        },
+        {
+            path: "invoiceId",
+            select: "referredBy -_id"
+        },
+        {
+            path: "results.test",
         }
     ]).select("-__v");
 }
@@ -92,4 +99,32 @@ exports.removeFileService = async (req) => {
     }
 
     return await Test.updateOne({ _id: test._id }, { $set: { file_url: '', available: false, description: '' } })
+}
+
+exports.updateTestService = async (id, data) => {
+
+    /**
+     * results: [{
+            test: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'TestName',
+            },
+            result: String,
+        }
+        ],
+
+        data.results = [{
+            testId: "5f9b0b4b1c9d440000f1b0b4",
+            result: "Positive"
+        }]
+     */
+
+    if (data.type === 'main') {
+        return await Promise.all(data.results.map(async (result) => {
+            return await Test.updateOne(
+                { _id: id, "results._id": result.testId },
+                { $set: { "results.$.result": result.value } }
+            )
+        }))
+    }
 }

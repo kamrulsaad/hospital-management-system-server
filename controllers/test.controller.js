@@ -1,4 +1,4 @@
-const { updateFileUrlService, findAllTestsService, findTestByIdService, findByIdAndDeleteService, removeFileService } = require("../services/test.service");
+const { updateFileUrlService, findAllTestsService, findTestByIdService, findByIdAndDeleteService, removeFileService, updateTestService } = require("../services/test.service");
 
 exports.uploadTestFile = async (req, res) => {
     try {
@@ -23,7 +23,7 @@ exports.allTests = async (req, res) => {
 
         const { page } = req.pagination;
 
-        const { tests, total } = await findAllTestsService(req.pagination);
+        const { tests, total } = await findAllTestsService(req.pagination)
 
         res.status(200).json({
             status: "success",
@@ -86,7 +86,7 @@ exports.removeFile = async (req, res) => {
 
         const test = await removeFileService(req);
 
-        if(!test?.modifiedCount) {
+        if (!test?.modifiedCount) {
             return res.status(500).json({
                 status: "fail",
                 error: "Something went wrong"
@@ -97,6 +97,42 @@ exports.removeFile = async (req, res) => {
             status: "success",
             message: "File Removed Successfully"
         })
+    } catch (error) {
+        res.status(500).json({
+            status: "fail",
+            error: error.message
+        })
+    }
+}
+
+exports.updateTest = async (req, res) => {
+    try {
+
+        const result = await updateTestService(req.params.testId, req.body);
+
+        if (req.body.type === "main") {
+            result.forEach( (test) => {
+                if (!test.mathedCount) {
+                    res.status(500).json({
+                        status: "fail",
+                        error: "Test not Found"
+                    })
+                }
+                if (!test.modifiedCount) {
+                    res.status(500).json({
+                        status: "fail",
+                        error: "Not Updated"
+                    })
+                }
+            });
+        }
+
+        res.status(200).json({
+            status: "success",
+            message: "Test Updated Successfully",
+            data: result
+        })
+
     } catch (error) {
         res.status(500).json({
             status: "fail",
