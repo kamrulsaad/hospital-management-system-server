@@ -14,7 +14,7 @@ router.post('/create/:patientId', verifyToken, invController.createInvoice)
 
 router.get("/qr/:invId", invController.getInvoiceQR)
 
-router.get("/status/:invId", verifyToken, invController.updateInvoiceStatus)
+router.post("/status/:invId", verifyToken, invController.updateInvoiceStatus)
 
 router.route('/:invId')
     .get(verifyToken, invController.findInvById)

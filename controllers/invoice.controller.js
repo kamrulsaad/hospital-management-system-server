@@ -101,7 +101,7 @@ exports.getInvoiceQR = async (req, res) => {
 exports.updateInvoiceStatus = async (req, res) => {
     try {
 
-        const data = await statusUpdateService(req.params.invId)
+        const data = await statusUpdateService(req.params.invId, req.body)
 
         if (!data.modifiedCount) return res.status(500).json({
             status: 'fail',

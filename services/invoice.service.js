@@ -115,9 +115,29 @@ exports.deleteInvoiceService = async (_id) => {
     await Patient.updateOne({ _id: invoice.patient }, { $pull: { invoices: _id } })
 }
 
-exports.statusUpdateService = async (id) => {
-    return await Invoice.updateOne({ _id: id }, { paymentCompleted: true })
-}
+exports.statusUpdateService = async (id, info) => {
+    const invoice = await Invoice.findById(id);
+
+    if (!invoice) {
+        throw new Error('Invoice not found');
+    }
+
+    if (info.paidAmount > invoice.dueAmount) {
+        throw new Error('Paid amount cannot be greater than due amount');
+    }
+
+    return await Invoice.updateOne(
+        { _id: id },
+        {
+            $inc: {
+                paidAmount: info.paidAmount,
+                dueAmount: -info.paidAmount,
+            },
+        }
+    );
+};
+
+
 
 exports.getMonthlyInvoiceService = async () => {
     return await Invoice.find({
