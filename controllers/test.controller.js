@@ -108,29 +108,11 @@ exports.removeFile = async (req, res) => {
 exports.updateTest = async (req, res) => {
     try {
 
-        const result = await updateTestService(req.params.testId, req.body);
-
-        if (req.body.type === "main") {
-            result.forEach( (test) => {
-                if (!test.mathedCount) {
-                    res.status(500).json({
-                        status: "fail",
-                        error: "Test not Found"
-                    })
-                }
-                if (!test.modifiedCount) {
-                    res.status(500).json({
-                        status: "fail",
-                        error: "Not Updated"
-                    })
-                }
-            });
-        }
+        await updateTestService(req.params.testId, req.body);
 
         res.status(200).json({
             status: "success",
             message: "Test Updated Successfully",
-            data: result
         })
 
     } catch (error) {

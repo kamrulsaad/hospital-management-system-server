@@ -103,24 +103,8 @@ exports.removeFileService = async (req) => {
 
 exports.updateTestService = async (id, data) => {
 
-    /**
-     * results: [{
-            test: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'TestName',
-            },
-            result: String,
-        }
-        ],
-
-        data.results = [{
-            testId: "5f9b0b4b1c9d440000f1b0b4",
-            result: "Positive"
-        }]
-     */
-
     if (data.type === 'main') {
-        return await Promise.all(data.results.map(async (result) => {
+        await Promise.all(data.results.map(async (result) => {
             return await Test.updateOne(
                 { _id: id, "results._id": result.testId },
                 { $set: { "results.$.result": result.value } }
