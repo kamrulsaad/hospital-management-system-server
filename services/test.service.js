@@ -43,7 +43,7 @@ exports.updateFileUrlService = async (req) => {
 
     const url = `${req.protocol}://${req.get('host')}/${req.file.path}`
 
-    await Test.updateOne({ _id: test._id }, { $set: { file_url: url, available: true, description: req.body.description } })
+    await Test.updateOne({ _id: test._id }, { $set: { file_url: url, available: true } })
 
     return url
 }
@@ -98,17 +98,47 @@ exports.removeFileService = async (req) => {
         });
     }
 
-    return await Test.updateOne({ _id: test._id }, { $set: { file_url: '', available: false, description: '' } })
+    return await Test.updateOne({ _id: test._id }, { $set: { file_url: '', available: false } })
 }
 
 exports.updateTestService = async (id, data) => {
 
     if (data.type === 'main') {
         await Promise.all(data.results.map(async (result) => {
+            await Test.updateOne({
+                _id: id,
+            },
+                {
+                    $set: {
+                        available: true,
+                    }
+                })
             return await Test.updateOne(
                 { _id: id, "results._id": result.testId },
                 { $set: { "results.$.result": result.value } }
             )
         }))
     }
+}
+
+exports.updateImageUrlService = async (req) => {
+
+    const user = await Test.findOne({ _id: req.params.testId });
+
+
+    if (user.image_url) {
+
+        const previousImagePath = path.join(__dirname, '..', user.image_url.replace(`${req.protocol}://${req.get('host')}/`, ''));
+        fs.unlink(previousImagePath, (err) => {
+            if (err) {
+                return err;
+            }
+        });
+    }
+
+    const url = `${req.protocol}://${req.get('host')}/${req.file.path}`
+
+    await Test.updateOne({ _id: user._id }, { $set: { image_url: url } })
+
+    return url
 }
