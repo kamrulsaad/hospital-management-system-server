@@ -125,18 +125,17 @@ exports.updateTest = async (req, res) => {
 
 exports.updateTestImage = async (req, res) => {
     try {
-  
-      const url = await updateImageUrlService(req)
-  
-      res.status(200).json({
-        status: "success",
-        message: "Picture Updated Sucessfully",
-        url
-      })
+
+        await updateImageUrlService(req)
+
+        res.status(200).json({
+            status: "success",
+            message: "Picture Updated Sucessfully",
+        })
     } catch (error) {
-      res.status(500).json({
-        status: "fail",
-        error: error.message
-      })
+        res.status(500).json({
+            status: "fail",
+            error: error.message
+        })
     }
-  }
+}
