@@ -21,20 +21,16 @@ const PCSchema = new mongoose.Schema({
         trim: true,
     },
     organization: String,
-    commission: {
-        tests: [{
+    invoices: [{
+        invoice: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Test'
-        }],
-        total: {
-            type: Number,
-            min: [0, 'Commission cannot be negative'],
+            ref: 'Invoice'
         },
         paid: {
-            type: Number,
-            min: [0, 'Commission cannot be negative'],
+            type: Boolean,
+            default: false
         }
-    },
+    }],
     addedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

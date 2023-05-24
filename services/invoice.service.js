@@ -62,6 +62,34 @@ exports.createInvoiceService = async (info, user, patient) => {
     //     }
     // );
 
+    // create a new document for a new incoice in the following data format:  
+    // invoices: [{
+    //     invoice: {
+    //         type: mongoose.Schema.Types.ObjectId,
+    //         ref: 'Invoice'
+    //     },
+    //     paid: {
+    //         type: Boolean,
+    //         default: false
+    //     }
+    // }],
+
+    if (info?.referredBy) {
+        await PC.updateOne(
+            {
+                _id: info.referredBy
+            },
+            {
+                $push: {
+                    invoices: {
+                        invoice: invoice._id,
+                        paid: false
+                    }
+                }
+            }
+        )
+    }
+
     await Patient.updateOne(
         { _id: patient },
         { $push: { tests: { $each: tests }, invoices: invoice._id } }

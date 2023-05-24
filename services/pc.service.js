@@ -29,7 +29,7 @@ exports.getAllService = async (pagination) => {
         phone: 1,
         location: 1,
         serialId: 1,
-    }).skip(startIndex).limit(limit);
+    }).sort({ serialId: -1 }).skip(startIndex).limit(limit);
 
     return { pcs, total }
 
@@ -39,21 +39,15 @@ exports.getPCByIdService = async (id) => {
     return await PC.findById(id)
         .populate([
             {
-                path: 'commission.tests',
-                populate: [
-                    {
-                        path: 'category',
-                        select: 'name'
-                    },
-                    {
-                        path: 'patient',
-                        select: 'name'
-                    },
-                    {
-                        path: 'createdBy',
-                        select: 'firstName lastName role email'
-                    }
-                ]
+                path: 'invoices.invoice',
+                select: 'serialId createdAt total_PC_Commission',
+                populate: [{
+                    path: 'patient',
+                    select: 'name phone serialId'
+                }, {
+                    path: 'tests',
+                    select: 'name charge pcRate'
+                }]
             },
             {
                 path: 'addedBy',
