@@ -65,3 +65,13 @@ exports.updatePCService = async (id, data) => {
 exports.deletePCService = async (id) => {
     return await PC.deleteOne({ _id: id });
 }
+
+exports.getPCInvoiceService = async (id, invoiceId) => {
+    return await PC.find({ _id: id, "invoices.invoice": invoiceId }, {
+        invoices: {
+            $elemMatch: {
+                invoice: invoiceId
+            }
+        }
+    })
+}

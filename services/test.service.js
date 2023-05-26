@@ -19,7 +19,11 @@ exports.findTestByIdService = async (testId) => {
         },
         {
             path: "invoiceId",
-            select: "referredBy -_id"
+            select: "-_id dueAmount",
+            populate: {
+                path: 'referredBy',
+                select: 'name -_id'
+            }
         },
         {
             path: "results.test",
