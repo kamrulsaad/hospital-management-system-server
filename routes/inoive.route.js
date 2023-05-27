@@ -1,7 +1,6 @@
 const express = require('express')
 const invController = require('../controllers/invoice.controller')
 const paginate = require('../middlewares/paginate')
-const verifyAccountant = require('../middlewares/verifyAccountant')
 const verifyAdmin = require('../middlewares/verifyAdmin')
 const router = express.Router()
 const verifyToken = require('../middlewares/verifyToken')
