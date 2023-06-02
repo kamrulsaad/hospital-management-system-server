@@ -36,6 +36,11 @@ const SubCategorySchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please add a nature of examination'],
     },
+    roomNo: {
+        type: String,
+        trim: true,
+        required: [true, 'Please add a room number'],
+    },
     tests: [
         {
             type: mongoose.Schema.ObjectId,

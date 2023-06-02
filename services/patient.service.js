@@ -19,7 +19,7 @@ exports.findPatientbyIdService = async (_id) => {
             path: 'category',
             select: 'name charge -_id'
         }
-    },  
+    },
     {
         path: "tests",
         select: "createdAt serialId available file_url",
@@ -32,22 +32,34 @@ exports.findPatientbyIdService = async (_id) => {
 }
 
 exports.getAllPatientsService = async (pagination) => {
+    const { startIndex, limit, key, value } = pagination;
 
-    const { startIndex, limit, key, value } = pagination
+    let query = {};
 
-    const query = key ? {
-        [key]: {
-            $regex: value,
-            $options: 'i'
+    if (key && value) {
+        if (value.toLowerCase() === "true") {
+            query[key] = true;
+        } else if (value.toLowerCase() === "false") {
+            query[key] = false;
+        } else {
+            query[key] = {
+                $regex: value,
+                $options: "i",
+            };
         }
-    } : {};
+    }
 
-    const total = await Patient.find(query).countDocuments()
+    const total = await Patient.find(query).countDocuments();
 
-    const patients = await Patient.find(query).select('name phone serialId age bloodGroup gender createdAt').sort({ "serialId": -1 }).skip(startIndex).limit(limit);
+    const patients = await Patient.find(query)
+        .select("name phone serialId age bloodGroup gender createdAt admitted")
+        .sort({ serialId: -1 })
+        .skip(startIndex)
+        .limit(limit);
 
-    return { total, patients }
-}
+    return { total, patients };
+};
+
 
 exports.deletePatientService = async (_id) => {
     await Patient.deleteOne({ _id })

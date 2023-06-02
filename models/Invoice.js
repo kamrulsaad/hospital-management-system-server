@@ -83,7 +83,7 @@ const invoiceSchema = mongoose.Schema({
             min: [0, "VAT amount cannot be negative"],
             validate: {
                 validator: function () {
-                    const vatAmount = Math.ceil(this.sub_total * (this.VAT.vatPercentage/ 100));
+                    const vatAmount = Math.ceil(this.sub_total * (this.VAT.vatPercentage / 100));
                     return vatAmount === this.VAT.vatAmount;
                 },
                 message: "VAT amount value is incorrect. Please ensure that it is calculated correctly."
@@ -109,6 +109,9 @@ const invoiceSchema = mongoose.Schema({
             message: "Due Amount value is incorrect. Please ensure that it is calculated correctly."
         }
     },
+
+    deliveryDate: String,
+    remarks: String,
 
 
     referredBy: {

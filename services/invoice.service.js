@@ -48,32 +48,6 @@ exports.createInvoiceService = async (info, user, patient) => {
 
     }));
 
-    // await PC.updateOne(
-    //     {
-    //         _id: invoice.referredBy
-    //     },
-    //     {
-    //         $push: {
-    //             'commission.tests': {$each: tests}
-    //         },
-    //         $inc: {
-    //             'commission.total': invoice.total_PC_Commission
-    //         }
-    //     }
-    // );
-
-    // create a new document for a new incoice in the following data format:  
-    // invoices: [{
-    //     invoice: {
-    //         type: mongoose.Schema.Types.ObjectId,
-    //         ref: 'Invoice'
-    //     },
-    //     paid: {
-    //         type: Boolean,
-    //         default: false
-    //     }
-    // }],
-
     if (info?.referredBy) {
         await PC.updateOne(
             {
@@ -133,7 +107,7 @@ exports.invByIdService = async (id) => {
         },
         {
             path: "tests",
-            select: "name charge pcRate"
+            select: "name charge pcRate roomNo"
         },
         {
             path: "createdBy",
